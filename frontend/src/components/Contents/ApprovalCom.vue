@@ -79,7 +79,7 @@
         { id: 6, name: 'Chris Lee', details: 'Extra request details here...' },
       ]);
   
-      const itemsPerPage = 5;
+      const itemsPerPage = 7;
       const currentPage = ref(1);
   
       const totalPages = computed(() => Math.ceil(requests.value.length / itemsPerPage));
