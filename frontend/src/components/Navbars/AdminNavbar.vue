@@ -4,13 +4,11 @@
     <nav class="bg-emerald-600 absolute top-0 left-0 w-full z-10 bg-transparent md:flex-row md:flex-nowrap md:justify-start flex items-center p-4">
       <div class="w-full mx-auto items-center flex justify-between md:flex-nowrap flex-wrap md:px-10 px-4">
         <!-- Brand -->
-        <a class="text-white text-sm uppercase hidden lg:inline-block font-semibold" href="javascript:void(0)">
           <button
             @click="showPopup = true"
-            class="bg-orange-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50">
+            class="text-white text-sm uppercase hidden lg:inline-block font-semibold bg-orange-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50">
             <i class="fas fa-paper-plane mr-2"></i> New Request
           </button>
-        </a>
         <!-- Form -->
         <form class="md:flex hidden flex-row flex-wrap items-center lg:ml-auto mr-3">
           <div class="relative flex w-full flex-wrap items-stretch">

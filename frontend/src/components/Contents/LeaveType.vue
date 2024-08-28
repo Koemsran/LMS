@@ -2,7 +2,7 @@
   <div class="p-6 bg-white shadow-lg rounded-lg h-screen flex flex-col">
     <div class="flex justify-between items-center mb-4 px-4 mt-4">
       <h2 class="text-2xl font-bold">Manage Leave Types</h2>
-      <button @click="addLeaveType"
+      <button @click="showAddTypeModal = true"
         class="bg-emerald-600 text-white px-4 py-3 rounded hover:bg-emerald-700 flex items-center">
         <i class="fas fa-plus mr-2"></i>
         Add Leave Type
@@ -27,7 +27,7 @@
                 {{ leaveType.name }}
               </td>
               <td class="px-6 py-4 text-sm text-gray-500">
-                <button @click="editLeaveType(leaveType.id)" class="text-indigo-600 hover:text-indigo-900 mr-2">
+                <button @click="editLeaveType(leaveType)" class="text-indigo-600 hover:text-indigo-900 mr-2">
                   Edit |
                 </button>
                 <button @click="deleteLeaveType(leaveType.id)" class="text-red-500 hover:text-red-900">
@@ -39,7 +39,32 @@
         </table>
       </div>
     </div>
+    <!-- Add/Edit Department Modal -->
+    <div v-if="showAddTypeModal || showEditTypeModal"
+      class="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
+      <div class="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
+        <h3 class="text-lg font-bold p-3">{{ typeId ? 'Edit Type' : 'Add Type' }}</h3>
+        <!-- Form Start -->
+        <form @submit.prevent="saveType" class="p-3">
+          <div class="mb-4">
+            <input v-model="typeName" id="typeName" type="text"
+              class="border p-2 w-full mt-1 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500"
+              placeholder="Type Name" required />
+          </div>
+          <div class="flex justify-end">
+            <button type="submit" class="bg-emerald-600 text-white px-4 py-2 rounded hover:bg-emerald-700 mr-2">
+              Save
+            </button>
+            <button type="button" @click="closeModal" style="background-color: red;"
+              class="bg-gray-300 text-white px-4 py-2 rounded hover:bg-gray-400">
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
+  
 </template>
 
 <script>
@@ -58,21 +83,47 @@ export default {
         { id: 9, name: "Special leave" },  // New leave type
         { id: 10, name: "Career over leave" }   // New leave type
       ],
+      typeName: '',
+      typeId: null,
+      showAddTypeModal: false,
+      showEditTypeModal: false,
     };
   },
   methods: {
     addLeaveType() {
-      // Logic to add a leave type
-      alert('Add Leave Type');
+      // Logic to add a department
+      this.leaveTypes.push({
+        id: this.typeId.length + 1,
+        name: this.typeName,
+      });
+      this.closeModal();
     },
-    editLeaveType(id) {
-      // Logic to edit a leave type
-      alert(`Edit Leave Type ID: ${id}`);
+    editLeaveType(type) {
+      this.typeId = type.id;
+      this.typeName = type.name;
+      this.showEditTypeModal = true;
     },
     deleteLeaveType(id) {
-      // Logic to delete a leave type
-      alert(`Delete Leave Type ID: ${id}`);
+      this.leaveTypes = this.leaveTypes.filter(type => type.id !== id);
     },
+    saveType() {
+      if (this.typeId) {
+        // Update existing department
+        const type = this.leaveTypes.find(d => d.id === this.typeId);
+        type.name = this.typeName;
+        this.typeId = null;
+      } else {
+        // Add new department
+        this.addLeaveType();
+      }
+      this.closeModal();
+    },
+    closeModal() {
+      this.typeName = '';
+      this.typeId = null;
+      this.showAddTypeModal = false;
+      this.showEditTypeModal = false;
+    }
   },
 };
 </script>
