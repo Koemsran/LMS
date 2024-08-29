@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'profile',
     ];
 
     /**
@@ -41,4 +42,15 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public static function store($request, $id = null){
+        $data = $request->only('name', 'email', 'password');
+        if ($request->hasFile('profile')) {
+            $imageName = time() . '.' . $request->file('profile')->extension();
+            $request->file('profile')->storeAs('public/images', $imageName); 
+            $data['profile'] = 'images/' . $imageName; 
+        }
+        $data = self::updateOrCreate(['id' => $id], $data);
+        return $data;
+    }
 }
