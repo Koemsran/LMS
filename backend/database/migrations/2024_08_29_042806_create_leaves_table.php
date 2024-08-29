@@ -18,7 +18,8 @@ return new class extends Migration
             $table->date('date_from');
             $table->date('date_to');
             $table->decimal('duration');
-            $table->string('reason');
+            $table->string('reason')->nullable();
+            $table->string('status')->default('pending');;
             $table->timestamps();
         });
     }

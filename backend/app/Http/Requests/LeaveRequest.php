@@ -17,8 +17,8 @@ class LeaveRequest extends DefaultRequest
         return [
             'user_id' =>'required|exists:users,id',
             'leave_type_id' =>'required|exists:leave_types,id',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after:start_date',
+            'date_from' => 'required|date',
+            'date_to' => 'required|date|after:start_date',
         ];
     }
 }

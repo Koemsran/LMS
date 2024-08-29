@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LeaveRequest;
@@ -42,7 +42,9 @@ class LeaveController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $leave = Leave::find($id);
+        $leave = new LeaveResource($leave);
+        return response()->json(['success'=> true, "data"=>$leave ],200);
     }
 
     /**
@@ -58,7 +60,8 @@ class LeaveController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        Leave::store($request, $id);
+        return response()->json(['success'=> true, 'message'=> 'Leave updated successfully'],201);
     }
 
     /**
@@ -66,6 +69,8 @@ class LeaveController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $leave = Leave::find($id);
+        $leave -> delete();
+        return response()->json(['success'=> true, 'message'=> 'Leave deleted successfully'],200);
     }
 }

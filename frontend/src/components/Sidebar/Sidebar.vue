@@ -13,7 +13,7 @@
       <router-link
         class="md:block text-left text-blueGray-600 inline-block text-sm uppercase font-bold py-0 flex items-center justify-center mx-auto"
         to="/admin/dashboard">
-        <img width="160" height="150" src="../../assets/img/logo3.png" alt="" class="mx-auto">
+        <img width="170" height="160" src="../../assets/img/logo5.png" alt="" class="mx-auto">
       </router-link>
 
       <!-- User -->
@@ -187,7 +187,14 @@
         <ul class="md:flex-col md:min-w-full flex flex-col list-none md:mb-4">
           <li class="items-center">
             <router-link class="text-blueGray-700 hover:text-blueGray-500 text-xs uppercase py-3 font-bold block"
-              to="/admin/roles">
+              to="/admin/users" >
+              <i class="fas fa-user text-blueGray-300 mr-2 text-sm"></i>
+              Users
+            </router-link>
+          </li>
+          <li class="items-center">
+            <router-link class="text-blueGray-700 hover:text-blueGray-500 text-xs uppercase py-3 font-bold block"
+              to="/admin/roles" >
               <i class="fas fa-fingerprint text-blueGray-300 mr-2 text-sm"></i>
               Roles
             </router-link>
@@ -195,7 +202,7 @@
 
           <li class="items-center">
             <router-link class="text-blueGray-700 hover:text-blueGray-500 text-xs uppercase py-3 font-bold block"
-              to="/admin/permissions">
+              to="/admin/permissions" >
               <i class="fas fa-clipboard-list text-blueGray-300 mr-2 text-sm"></i>
               Permission
             </router-link>

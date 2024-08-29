@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LeaveTpyeRequest;
 use App\Http\Resources\LeaveTpyeResource;
+use App\Models\LeaveType;
 use App\Models\TypeLeav;
 use Illuminate\Http\Request;
 
@@ -15,7 +16,7 @@ class TypeLeaveController extends Controller
      */
     public function index()
     {
-        $typeLeaves = TypeLeav::all();
+        $typeLeaves = LeaveType::all();
         $typeLeaves = LeaveTpyeResource::collection($typeLeaves);
         return response()->json(['success'=> true, "data"=>$typeLeaves ],200);
     }
@@ -33,8 +34,8 @@ class TypeLeaveController extends Controller
      */
     public function store(LeaveTpyeRequest $request)
     {
-            TypeLeav::store($request);
-            return response()->json(['success'=>true, "data"=>"type of leave created successfully"], 200);
+        LeaveType::store($request);
+        return response()->json(['success'=>true, "data"=>"type of leave created successfully"], 200);
     }
 
     /**
@@ -42,7 +43,7 @@ class TypeLeaveController extends Controller
      */
     public function show(string $id)
     {
-        $typeLeave = TypeLeav::find($id);
+        $typeLeave = LeaveType::find($id);
         if($typeLeave){
             $typeLeave = new LeaveTpyeResource($typeLeave);
             return response()->json(['success'=> true, "data"=>$typeLeave ],200);
@@ -65,7 +66,7 @@ class TypeLeaveController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        TypeLeav::store($request, $id);
+        LeaveType::store($request, $id);
         return response()->json(['success'=>true, "data"=>"type of leave updated successfully"], 200);
     }
 
@@ -74,7 +75,7 @@ class TypeLeaveController extends Controller
      */
     public function destroy(string $id)
     {
-        $type = TypeLeav::find($id);
+        $type = LeaveType::find($id);
         $type ->delete();
         return response()->json(['success'=> true, "message"=>"type of leave deleted successfully"], 200);
     }

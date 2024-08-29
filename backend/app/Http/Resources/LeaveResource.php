@@ -16,9 +16,9 @@ class LeaveResource extends JsonResource
     {
         return [
             "id"=>$this->id,
-            "user_name"=>$this->user,
-            "leave_type"=>$this->leave_type,
-            "date_from"=>$this->date_form,
+            "user_name"=>$this->user->name,
+            "leave_type"=>$this->leaveType->name,
+            "date_from"=>$this->date_from,
             "date_to"=>$this->date_to,
             "duration"=>$this->duration,
             "reason"=>$this->reason,

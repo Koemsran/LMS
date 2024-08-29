@@ -27,6 +27,7 @@ import Departments from "@/views/admin/Departments.vue";
 import Reports from "@/views/admin/Reports.vue";
 import Calendars from "@/views/admin/Calendars.vue";
 import Roles from "@/views/admin/Roles.vue";
+import Users from "@/views/admin/Users.vue";
 import Permissions from "@/views/admin/Permissions.vue";
 
 // views for Auth layout
@@ -109,6 +110,10 @@ const routes = [
   {
     path: "/admin/roles",
     component: Roles,
+  },
+  {
+    path: "/admin/users",
+    component: Users,
   },
   {
     path: "/admin/permissions",

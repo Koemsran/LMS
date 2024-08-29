@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\LeaveController as ApiLeaveController;
 use App\Http\Controllers\Api\TypeLeaveController;
 use App\Http\Controllers\LeaveController;
 use App\Http\Controllers\UserController;
@@ -36,9 +37,8 @@ Route::put('/type-leave/update/{id}', [TypeLeaveController::class, 'update']);
 Route::delete('/type-leave/delete/{id}', [TypeLeaveController::class, 'destroy']);
 
 // ===================== Leave Request  =========================
-
-Route::get('/leaves/list', [LeaveController::class, 'index']);
-Route::post('/leave/request', [LeaveController::class, 'store']);
-Route::get('/leave/show/{id}', [LeaveController::class, 'show']);
-Route::put('/leave/update/{id}', [LeaveController::class, 'update']);
-Route::delete('/leave/delete/{id}', [LeaveController::class, 'destroy']);
+Route::get('/leaves/list', [ApiLeaveController::class, 'index']);
+Route::post('/leave/request', [ApiLeaveController::class, 'store']);
+Route::get('/leave/show/{id}', [ApiLeaveController::class, 'show']);
+Route::put('/leave/update/{id}', [ApiLeaveController::class, 'update']);
+Route::delete('/leave/cancel/{id}', [ApiLeaveController::class, 'destroy']);
