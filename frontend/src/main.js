@@ -22,6 +22,7 @@ import Tables from "@/views/admin/Tables.vue";
 import Approvals from "@/views/admin/Approvals.vue";
 import Leaves from "@/views/admin/Leaves.vue";
 import LeaveTypes from "@/views/admin/LeaveTypes.vue";
+import LeaveBalances from "@/views/admin/LeaveBalances.vue";
 import Departments from "@/views/admin/Departments.vue";
 import Reports from "@/views/admin/Reports.vue";
 import Calendars from "@/views/admin/Calendars.vue";
@@ -88,6 +89,10 @@ const routes = [
   {
     path: "/admin/leaves",
     component: Leaves,
+  },
+  {
+    path: "/admin/leave-balance",
+    component: LeaveBalances,
   },
   {
     path: "/admin/reports",

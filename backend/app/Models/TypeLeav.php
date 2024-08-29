@@ -8,4 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class TypeLeav extends Model
 {
     use HasFactory;
+    protected $fillable = ['id', 'name'];
+    public static function store($request, $id=null){
+        $data = $request->only('name');
+        $data = self::updateOrCreate(['id' => $id], $data);
+        return $data;
+
+    }
 }

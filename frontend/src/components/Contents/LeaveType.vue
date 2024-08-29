@@ -64,59 +64,73 @@
       </div>
     </div>
   </div>
-  
+
 </template>
 
 <script>
+import axios from 'axios';
 export default {
   data() {
     return {
-      leaveTypes: [
-        { id: 1, name: "Sick Leave" },
-        { id: 2, name: "Casual Leave" },
-        { id: 3, name: "Maternity Leave" },
-        { id: 4, name: "Paternity Leave" },
-        { id: 5, name: "Annual Leave" },
-        { id: 6, name: "Paid Leave" },  // New leave type
-        { id: 7, name: "Unpaid Leave" },  // New leave type
-        { id: 8, name: "Bereavement Leave" },  // New leave type
-        { id: 9, name: "Special leave" },  // New leave type
-        { id: 10, name: "Career over leave" }   // New leave type
-      ],
+      leaveTypes: [],
       typeName: '',
       typeId: null,
       showAddTypeModal: false,
       showEditTypeModal: false,
     };
   },
+  mounted() {
+    this.fetchTypes();
+  },
   methods: {
-    addLeaveType() {
-      // Logic to add a department
-      this.leaveTypes.push({
-        id: this.typeId.length + 1,
-        name: this.typeName,
-      });
-      this.closeModal();
+    async fetchTypes() {
+      try {
+        const response = await axios.get('http://127.0.0.1:8000/api/type-leave/list');
+        this.leaveTypes = response.data.data;
+      } catch (error) {
+        console.error('Error fetching type of leave:', error);
+      }
+    },
+    async addLeaveType() {
+      try {
+        await axios.post('http://127.0.0.1:8000/api/type-leave/create', {
+          name: this.typeName,
+        });
+        this.fetchTypes();
+        this.closeModal();
+      } catch (error) {
+        console.error('Error creating type of leave:', error);
+      }
     },
     editLeaveType(type) {
       this.typeId = type.id;
       this.typeName = type.name;
       this.showEditTypeModal = true;
     },
-    deleteLeaveType(id) {
-      this.leaveTypes = this.leaveTypes.filter(type => type.id !== id);
-    },
-    saveType() {
-      if (this.typeId) {
-        // Update existing department
-        const type = this.leaveTypes.find(d => d.id === this.typeId);
-        type.name = this.typeName;
-        this.typeId = null;
-      } else {
-        // Add new department
-        this.addLeaveType();
+    async saveType() {
+      try {
+        if (this.typeId) {
+          await axios.put(`http://127.0.0.1:8000/api/type-leave/update/${this.typeId}`, {
+            name: this.typeName,
+          });
+        }
+        else {
+          this.addLeaveType();
+        }
+        this.fetchTypes();
+        this.closeModal();
+
+      } catch (error) {
+        console.error('Error updating type of leave:', error);
       }
-      this.closeModal();
+    },
+    async deleteLeaveType(id) {
+      try {
+        await axios.delete(`http://127.0.0.1:8000/api/type-leave/delete/${id}`);
+        this.fetchTypes();
+      } catch (error) {
+        console.error('Error creating type of leave:', error);
+      }
     },
     closeModal() {
       this.typeName = '';
