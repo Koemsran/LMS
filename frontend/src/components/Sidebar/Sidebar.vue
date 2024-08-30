@@ -55,7 +55,6 @@
               class="border-0 px-3 py-2 h-12 border border-solid border-blueGray-500 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-base leading-snug shadow-none outline-none focus:outline-none w-full font-normal" />
           </div>
         </form>
-
         <!-- Divider -->
         <hr class="my-4 md:min-w-full" />
         <!-- Heading -->
@@ -170,12 +169,7 @@
               </a>
             </router-link>
           </li>
-
-
         </ul>
-
-
-
         <!-- Divider -->
         <hr class="my-4 md:min-w-full" />
         <!-- Heading -->

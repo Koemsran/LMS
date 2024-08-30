@@ -81,7 +81,7 @@
         <li class="{{ request()->is('settings') ? 'active' : '' }}">
             <a href="{{ URL('settings') }}">
                 <i class="now-ui-icons ui-1_settings-gear-63"></i>
-                <p>Settings</p>
+                <p>Users</p>
             </a>
         </li>
         
