@@ -1,17 +1,10 @@
 <template>
-    <div class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded"
-        :class="[color === 'light' ? 'bg-white' : 'bg-emerald-900 text-white']">
-        <div class="rounded-t mb-0 px-4 py-3 border-0">
-            <div class="flex flex-wrap items-center">
-                <div class="relative w-full px-4 max-w-full flex-grow flex-1">
-                    <h3 class="font-semibold text-3xl my-2"
-                        :class="[color === 'light' ? 'text-blueGray-700' : 'text-white']">
-                        Manage Leave Application
-                    </h3>
-                </div>
-            </div>
-        </div>
-        <div class="block w-full overflow-x-auto">
+    <div class="min-h-screen flex flex-col">
+      <!-- Main Content -->
+      <main class="flex-grow p-4 bg-gray-100">
+        <div class="max-w-7xl mx-auto p-4">
+          <div class="block w-full overflow-x-auto">
+          <h2 class="text-2xl font-bold mb-6">Leave History</h2>
             <!-- Projects table -->
             <table class="items-center w-full bg-transparent border-collapse">
                 <thead>
@@ -22,7 +15,7 @@
                                     ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
                                     : 'bg-emerald-800 text-emerald-300 border-emerald-700',
                             ]">
-                            Employee Name
+                            #
                         </th>
                         <th class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
                             :class="[
@@ -47,14 +40,6 @@
                                     : 'bg-emerald-800 text-emerald-300 border-emerald-700',
                             ]">
                             Date To
-                        </th>
-                        <th class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
-                            :class="[
-                                color === 'light'
-                                    ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
-                                    : 'bg-emerald-800 text-emerald-300 border-emerald-700',
-                            ]">
-                            Duration
                         </th>
 
                         <th class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
@@ -90,86 +75,73 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="leave in leaves" :key="leave.id">
-                        <th
-                            class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center">
-                            <img src="@/assets/img/me.jpg" class="h-12 w-12 bg-white rounded-full border" alt="..." />
-                            <span class="ml-3 font-bold" :class="[
-                                color === 'light' ? 'text-blueGray-600' : 'text-white',
-                            ]">
-                                {{ leave.user_name }}
-                            </span>
-                        </th>
-                        <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                            {{ leave.leave_type }}
+                    <tr v-for="leave in leavesHistory" :key="leave.id">
+                        
+                        <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 whitespace-nowrap p-4">
+                            {{ leave.id }}
                         </td>
-                        <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                            {{ leave.date_from }}
+                        <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 whitespace-nowrap p-4">
+                            {{ leave.type }}
                         </td>
-                        <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                            {{ leave.date_to }}
+                        <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 whitespace-nowrap p-4">
+                            {{ leave.dateFrom }}
                         </td>
-                        <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                            {{ leave.duration }}
+                        <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 whitespace-nowrap p-4">
+                            {{ leave.dateTo }}
                         </td>
-                        <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                        <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 whitespace-nowrap p-4">
                             <i :class="[
-                                leave.status === 'rejected' ? 'fas fa-circle text-red-500 mr-2' :
-                                    leave.status === 'pending' ? 'fas fa-circle text-orange-500 mr-2' :
-                                        'fas fa-circle text-green-500 mr-2'
+                                leave.status === 'Rejected' ? 'fas fa-circle text-red-500 mr-2' :
+                                leave.status === 'Pending' ? 'fas fa-circle text-orange-500 mr-2' :
+                                leave.status === 'Approved' ? 'fas fa-circle text-emerald-600 mr-2' :
+                                'fas fa-circle text-emerald-500 mr-2'
                             ]"></i>
                             {{ leave.status }}
                         </td>
-                        <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                        <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 whitespace-nowrap p-4">
                             {{ leave.reason }}
                         </td>
-                        <td
-                            class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-right">
-                            <table-dropdown />
+                        <td class="border-t-0 px-6 align-middle border-l-0 border-r-0  whitespace-nowrap p-4">
+                            <button class="bg-orange-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mr-3 rounded">
+                                Edit
+                            </button>
+                            <button class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                Delete
+                            </button>
+
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
+        </div>
+      </main>
+  
     </div>
-</template>
-
-<script>
-import TableDropdown from "@/components/Dropdowns/TableDropdown.vue";
-import axios from "axios";
-
-export default {
+  </template>
+  
+  <script>
+  export default {
     data() {
-        return {
-            leaves: [],
-
-        };
-    },
-    components: {
-        TableDropdown,
-    },
-
-    mounted() {
-        this.fetchLeaveRequest();
+      return {
+        leavesHistory: [
+          { id: 1, type: 'Sick Leave', dateFrom: '2024-08-01', dateTo: '2024-08-05', status: 'Approved', reason: 'Doctor’s note provided' },
+          { id: 2, type: 'Paid Leave', dateFrom: '2024-08-01', dateTo: '2024-08-05', status: 'Rejected', reason: 'Doctor’s note provided' },
+          { id: 3, type: 'Vacation', dateFrom: '2024-07-15', dateTo: '2024-07-20', status: 'Pending', reason: '-' },
+          // Add more leave records as needed
+        ],
+      };
     },
     methods: {
-        async fetchLeaveRequest() {
-            try {
-                const response = await axios.get(' http://127.0.0.1:8000/api/leaves/list');
-                this.leaves = response.data.data;
-            } catch (error) {
-                console.error('Error fetching users:', error);
-            }
-        },
+      viewDetails(leaveId) {
+        // Implement view details logic
+        console.log('View details for leave ID:', leaveId);
+      },
     },
-    props: {
-        color: {
-            default: "light",
-            validator: function (value) {
-                // The value must match one of these strings
-                return ["light", "dark"].indexOf(value) !== -1;
-            },
-        },
-    },
-};
-</script>
+  };
+  </script>
+  
+  <style scoped>
+  /* Optional: Additional custom styles */
+  </style>
+  

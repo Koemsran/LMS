@@ -29,6 +29,8 @@ import Calendars from "@/views/admin/Calendars.vue";
 import Roles from "@/views/admin/Roles.vue";
 import Users from "@/views/admin/Users.vue";
 import Permissions from "@/views/admin/Permissions.vue";
+import Subordinates from "@/views/admin/Subordinates.vue";
+import Histories from "@/views/admin/Histories.vue";
 
 // views for Auth layout
 
@@ -102,6 +104,14 @@ const routes = [
   {
     path: "/admin/departments",
     component: Departments,
+  },
+  {
+    path: "/admin/subordinates",
+    component: Subordinates,
+  },
+  {
+    path: "/admin/histories",
+    component: Histories,
   },
   {
     path: "/admin/calendars",

@@ -13,6 +13,9 @@
         <thead class="bg-gray-100">
           <tr>
             <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+              ID
+            </th>
+            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
               Department Name
             </th>
             <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
@@ -23,11 +26,14 @@
         <tbody class="bg-white divide-y divide-gray-200">
           <tr v-for="department in departments" :key="department.id">
             <td class="px-6 py-4 text-sm text-gray-900">
+              {{ department.id }}
+            </td>
+            <td class="px-6 py-4 text-sm text-gray-900">
               {{ department.name }}
             </td>
             <td class="px-6 py-4 text-sm text-gray-500">
               <button @click="editDepartment(department)" class="text-indigo-600 hover:text-indigo-900 mr-2">
-                Edit
+                Edit |
               </button>
               <button @click="deleteDepartment(department.id)" class="text-red-500 hover:text-red-900">
                 Delete
@@ -66,51 +72,72 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default {
   data() {
     return {
-      departments: [
-        { id: 1, name: "IT" },
-        { id: 2, name: "English" },
-        { id: 3, name: "Finance" },
-        { id: 4, name: "Student Life" },
-        { id: 5, name: "ERO" },
-        { id: 5, name: "HR" },
-      ],
+      departments: [],
       departmentName: '',
       editDepartmentId: null,
       showAddDepartmentModal: false,
       showEditDepartmentModal: false,
     };
   },
+  mounted() {
+    this.fetchDepartments();
+  },
+
   methods: {
-    addDepartment() {
-      // Logic to add a department
-      this.departments.push({
-        id: this.departments.length + 1,
-        name: this.departmentName,
-      });
-      this.closeModal();
+    async fetchDepartments() {
+      try {
+        const response = await axios.get('http://127.0.0.1:8000/api/departements/list');
+        this.departments = response.data.data;
+      } catch (error) {
+        console.error('Error fetching departement:', error);
+      }
+    },
+    async addDepartment() {
+      try {
+        await axios.post('http://127.0.0.1:8000/api/departement/create', {
+          name: this.departmentName
+        });
+        this.fetchDepartments();
+        this.closeModal();
+      } catch (error) {
+        console.error('Error creating departement:', error);
+      }
     },
     editDepartment(department) {
       this.editDepartmentId = department.id;
       this.departmentName = department.name;
       this.showEditDepartmentModal = true;
     },
-    saveDepartment() {
-      if (this.editDepartmentId) {
-        // Update existing department
-        const department = this.departments.find(d => d.id === this.editDepartmentId);
-        department.name = this.departmentName;
-        this.editDepartmentId = null;
-      } else {
-        // Add new department
-        this.addDepartment();
+    async saveDepartment() {
+      try {
+        if (this.editDepartmentId) {
+          await axios.put(`http://127.0.0.1:8000/api/departement/update/${this.editDepartmentId}`, {
+            name: this.departmentName
+          });
+          this.fetchDepartments();
+          this.closeModal();
+        }
+        else {
+          this.addDepartment();
+        }
       }
-      this.closeModal();
+      catch (error) {
+        console.error('Error updating departement:', error);
+      }
     },
-    deleteDepartment(id) {
-      this.departments = this.departments.filter(department => department.id !== id);
+    async deleteDepartment(id) {
+      try {
+        await axios.delete(`http://127.0.0.1:8000/api/departement/delete/${id}`);
+        this.fetchDepartments();
+      }
+      catch (error) {
+        console.error('Error deleting departement:', error);
+      }
+
     },
     closeModal() {
       this.departmentName = '';

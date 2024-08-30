@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
@@ -23,6 +24,8 @@ class User extends Authenticatable
         'email',
         'password',
         'profile',
+        'role_id',
+        'departement_id',
     ];
 
     /**
@@ -43,9 +46,14 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-
+    public function role(){
+        return $this->belongsTo(Role::class, 'role_id');
+    }
+    public function departement(){
+        return $this->belongsTo(Departement::class, 'departement_id');
+    }
     public static function store($request, $id = null){
-        $data = $request->only('name', 'email', 'password');
+        $data = $request->only('name', 'email', 'password', 'role_id', 'departement_id');
         if ($request->hasFile('profile')) {
             $imageName = time() . '.' . $request->file('profile')->extension();
             $request->file('profile')->storeAs('public/images', $imageName); 

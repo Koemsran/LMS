@@ -14,6 +14,9 @@
           <thead class="bg-gray-100">
             <tr>
               <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                ID
+              </th>
+              <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
                 Leave Type
               </th>
               <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
@@ -23,6 +26,9 @@
           </thead>
           <tbody class="bg-white divide-y divide-gray-200">
             <tr v-for="leaveType in leaveTypes" :key="leaveType.id">
+              <td class="px-6 py-4 text-sm text-gray-900">
+                {{ leaveType.id }}
+              </td>
               <td class="px-6 py-4 text-sm text-gray-900">
                 {{ leaveType.name }}
               </td>

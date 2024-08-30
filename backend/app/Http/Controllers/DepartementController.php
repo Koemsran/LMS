@@ -3,20 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\UserResource;
-use App\Models\User;
+use App\Http\Resources\DepartementResource;
+use App\Models\Departement;
 use Illuminate\Http\Request;
 
-class UserController extends Controller
+class DepartementController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $users = User::all();
-        $users = UserResource::collection($users);
-        return response()->json(['sucess'=> true, "data"=>$users ],200);
+        $departments = Departement::all();
+        $departments = DepartementResource::collection($departments);
+        return response()->json(['success'=> true, "data"=>$departments ],200);
     }
 
     /**
@@ -32,9 +32,8 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        User::store($request);
-        return response()->json(['success'=> true, "message"=>"User created successfully"],201);
-        
+        Departement::store($request);
+        return response()->json(['success'=> true, "message"=>"Department created successfully"], 201);
     }
 
     /**
@@ -42,12 +41,7 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        $user = User::find($id);
-        if($user){
-            return response()->json(['sucess'=> true, "data"=>$user ],200);
-        }else{
-            return response()->json(['error'=> 'User not found'],404);
-        }
+        //
     }
 
     /**
@@ -63,7 +57,8 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        Departement::store($request, $id);
+        return response()->json(['success'=> true, "message"=>"Department updated successfully"], 200);
     }
 
     /**
@@ -71,6 +66,8 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $department = Departement::find($id);
+        $department -> delete();
+        return response()->json(['success'=> true, "message"=>"Department deleted successfully"], 200);
     }
 }

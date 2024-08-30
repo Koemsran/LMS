@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\LeaveController as ApiLeaveController;
 use App\Http\Controllers\Api\TypeLeaveController;
+use App\Http\Controllers\DepartementController;
 use App\Http\Controllers\LeaveController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
@@ -42,3 +43,10 @@ Route::post('/leave/request', [ApiLeaveController::class, 'store']);
 Route::get('/leave/show/{id}', [ApiLeaveController::class, 'show']);
 Route::put('/leave/update/{id}', [ApiLeaveController::class, 'update']);
 Route::delete('/leave/cancel/{id}', [ApiLeaveController::class, 'destroy']);
+
+// ===================== Departement  =========================
+Route::get('/departements/list', [DepartementController::class, 'index']);
+Route::post('/departement/create', [DepartementController::class, 'store']);
+Route::get('/departement/show/{id}', [DepartementController::class, 'show']);
+Route::put('/departement/update/{id}', [DepartementController::class, 'update']);
+Route::delete('/departement/delete/{id}', [DepartementController::class, 'destroy']);

@@ -104,18 +104,18 @@
           </li>
 
           <li class="items-center">
-            <router-link to="/admin/calendars" v-slot="{ href, navigate, isActive }">
+            <router-link to="/admin/subordinates" v-slot="{ href, navigate, isActive }">
               <a :href="href" @click="navigate" class="text-xs uppercase py-3 font-bold block" :class="[
                 isActive
                   ? 'text-emerald-500 hover:text-emerald-600'
                   : 'text-blueGray-700 hover:text-blueGray-500',
               ]">
-                <i class="fas fa-calendar-alt mr-2 text-sm"
-                  :class="[isActive ? 'opacity-75' : 'text-blueGray-300']"></i>
-                Chalendar
+                <i class="fas fa-users mr-2 text-sm" :class="[isActive ? 'opacity-75' : 'text-blueGray-300']"></i>
+                Subordinates
               </a>
             </router-link>
           </li>
+
 
           <li class="items-center">
             <router-link to="/admin/leave-types" v-slot="{ href, navigate, isActive }">
@@ -158,6 +158,32 @@
             </router-link>
           </li>
           <li class="items-center">
+            <router-link to="/admin/histories" v-slot="{ href, navigate, isActive }">
+              <a :href="href" @click="navigate" class="text-xs uppercase py-3 font-bold block" :class="[
+                isActive
+                  ? 'text-emerald-500 hover:text-emerald-600'
+                  : 'text-blueGray-700 hover:text-blueGray-500',
+              ]">
+                <i class="fas fa-calendar-alt mr-2 text-sm"
+                  :class="[isActive ? 'opacity-75' : 'text-blueGray-300']"></i>
+                History
+              </a>
+            </router-link>
+          </li>
+          <li class="items-center">
+            <router-link to="/admin/calendars" v-slot="{ href, navigate, isActive }">
+              <a :href="href" @click="navigate" class="text-xs uppercase py-3 font-bold block" :class="[
+                isActive
+                  ? 'text-emerald-500 hover:text-emerald-600'
+                  : 'text-blueGray-700 hover:text-blueGray-500',
+              ]">
+                <i class="fas fa-calendar-alt mr-2 text-sm"
+                  :class="[isActive ? 'opacity-75' : 'text-blueGray-300']"></i>
+                Chalendar
+              </a>
+            </router-link>
+          </li>
+          <li class="items-center">
             <router-link to="/admin/reports" v-slot="{ href, navigate, isActive }">
               <a :href="href" @click="navigate" class="text-xs uppercase py-3 font-bold block" :class="[
                 isActive
@@ -181,14 +207,14 @@
         <ul class="md:flex-col md:min-w-full flex flex-col list-none md:mb-4">
           <li class="items-center">
             <router-link class="text-blueGray-700 hover:text-blueGray-500 text-xs uppercase py-3 font-bold block"
-              to="/admin/users" >
+              to="/admin/users">
               <i class="fas fa-user text-blueGray-300 mr-2 text-sm"></i>
               Users
             </router-link>
           </li>
           <li class="items-center">
             <router-link class="text-blueGray-700 hover:text-blueGray-500 text-xs uppercase py-3 font-bold block"
-              to="/admin/roles" >
+              to="/admin/roles">
               <i class="fas fa-fingerprint text-blueGray-300 mr-2 text-sm"></i>
               Roles
             </router-link>
@@ -196,7 +222,7 @@
 
           <li class="items-center">
             <router-link class="text-blueGray-700 hover:text-blueGray-500 text-xs uppercase py-3 font-bold block"
-              to="/admin/permissions" >
+              to="/admin/permissions">
               <i class="fas fa-clipboard-list text-blueGray-300 mr-2 text-sm"></i>
               Permission
             </router-link>
