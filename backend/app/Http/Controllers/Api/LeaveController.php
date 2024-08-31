@@ -73,4 +73,22 @@ class LeaveController extends Controller
         $leave -> delete();
         return response()->json(['success'=> true, 'message'=> 'Leave deleted successfully'],200);
     }
+    public function approveLeave(string $id){
+        $leave = Leave::find($id);
+        $leave->status = 'approved';
+        $leave->save();
+        return response()->json(['success'=> true, 'message'=> 'Leave approved successfully'],200);
+    }
+    public function rejectLeave(string $id){
+        $leave = Leave::find($id);
+        $leave->status = 'rejected';
+        $leave->save();
+        return response()->json(['success'=> true, 'message'=> 'Leave rejected successfully'],200);
+    }
+    public function cancelLeaveRequest(string $id){
+        $leave = Leave::find($id);
+        $leave->status = 'cancelled';
+        $leave->save();
+        return response()->json(['success'=> true, 'message'=> 'Leave cancelled successfully'],200);
+    }
 }

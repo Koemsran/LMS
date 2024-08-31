@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\LeaveController as ApiLeaveController;
 use App\Http\Controllers\Api\TypeLeaveController;
 use App\Http\Controllers\DepartementController;
+use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\LeaveController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
@@ -42,7 +43,7 @@ Route::get('/leaves/list', [ApiLeaveController::class, 'index']);
 Route::post('/leave/request', [ApiLeaveController::class, 'store']);
 Route::get('/leave/show/{id}', [ApiLeaveController::class, 'show']);
 Route::put('/leave/update/{id}', [ApiLeaveController::class, 'update']);
-Route::delete('/leave/cancel/{id}', [ApiLeaveController::class, 'destroy']);
+Route::delete('/leave/delete/{id}', [ApiLeaveController::class, 'destroy']);
 
 // ===================== Departement  =========================
 Route::get('/departements/list', [DepartementController::class, 'index']);
@@ -50,3 +51,19 @@ Route::post('/departement/create', [DepartementController::class, 'store']);
 Route::get('/departement/show/{id}', [DepartementController::class, 'show']);
 Route::put('/departement/update/{id}', [DepartementController::class, 'update']);
 Route::delete('/departement/delete/{id}', [DepartementController::class, 'destroy']);
+
+// ========================= Leave History =============================
+Route::get('/histories/list', [HistoryController::class, 'index']);
+Route::post('/history/create', [HistoryController::class, 'store']);
+Route::delete('/history/delete/{id}', [HistoryController::class, 'destroy']);
+
+// ========================= Leave Status  =============================
+Route::post('/leave/approve/{id}', [ApiLeaveController::class, 'approveLeave']);
+Route::post('/leave/reject/{id}', [ApiLeaveController::class, 'rejectLeave']);
+Route::post('/leave/cancel-request/{id}', [ApiLeaveController::class, 'cancelLeaveRequest']);
+
+
+// ========================= Subodinate  =============================
+Route::get('/subordinates/list', [UserController::class, 'getSubordinates']);
+Route::post('/subordinate/assign', [UserController::class, 'assignSubordinate']);
+Route::delete('/subordinate/remove', [UserController::class, 'removeSubordinate']);

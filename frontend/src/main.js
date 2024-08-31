@@ -59,7 +59,7 @@ const routes = [
         path: "/admin/settings",
         component: Settings,
       },
-      {
+      {   
         path: "/admin/tables",
         component: Tables,
       }

@@ -11,6 +11,48 @@
                 </div>
             </div>
         </div>
+        
+        <!-- Tabs for filtering -->
+        <div class="px-4 py-2 rounded-t">
+            <div class="flex space-x-2">
+                <button
+                    class="py-2 px-4 rounded focus:outline-none"
+                    :class="{ 'bg-red-500 text-white': filter === 'all', 'border border-red-500': filter !== 'all' }"
+                    @click="filterHistories('all')"
+                >
+                    All
+                </button>
+                <button
+                    class="py-2 px-4 rounded focus:outline-none"
+                    :class="{ 'bg-red-500 text-white': filter === 'pending', 'border border-red-500': filter !== 'pending' }"
+                    @click="filterHistories('pending')"
+                >
+                    Pending
+                </button>
+                <button
+                    class="py-2 px-4 rounded focus:outline-none"
+                    :class="{ 'bg-red-500 text-white': filter === 'approved', 'border border-red-500': filter !== 'approved' }"
+                    @click="filterHistories('approved')"
+                >
+                    Approved
+                </button>
+                <button
+                    class="py-2 px-4 rounded focus:outline-none"
+                    :class="{ 'bg-red-500 text-white': filter === 'rejected', 'border border-red-500': filter !== 'rejected' }"
+                    @click="filterHistories('rejected')"
+                >
+                    Rejected
+                </button>
+                <button
+                    class="py-2 px-4 rounded focus:outline-none"
+                    :class="{ 'bg-red-500 text-white': filter === 'cancelled', 'border border-red-500': filter !== 'cancelled' }"
+                    @click="filterHistories('cancelled')"
+                >
+                    Cancelled
+                </button>
+            </div>
+        </div>
+
         <div class="block w-full overflow-x-auto">
             <!-- Projects table -->
             <table class="items-center w-full bg-transparent border-collapse">
@@ -56,7 +98,6 @@
                             ]">
                             Duration
                         </th>
-
                         <th class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
                             :class="[
                                 color === 'light'
@@ -90,7 +131,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="leave in leaves" :key="leave.id">
+                    <tr v-for="leave in filteredLeaves" :key="leave.id">
                         <th
                             class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center">
                             <img src="@/assets/img/me.jpg" class="h-12 w-12 bg-white rounded-full border" alt="..." />
@@ -116,7 +157,8 @@
                             <i :class="[
                                 leave.status === 'rejected' ? 'fas fa-circle text-red-500 mr-2' :
                                     leave.status === 'pending' ? 'fas fa-circle text-orange-500 mr-2' :
-                                        'fas fa-circle text-green-500 mr-2'
+                                        leave.status === 'cancelled' ? 'fas fa-circle text-red-500 mr-2' :
+                                            'fas fa-circle text-emerald-500 mr-2'
                             ]"></i>
                             {{ leave.status }}
                         </td>
@@ -133,7 +175,6 @@
         </div>
     </div>
 </template>
-
 <script>
 import TableDropdown from "@/components/Dropdowns/TableDropdown.vue";
 import axios from "axios";
@@ -142,31 +183,40 @@ export default {
     data() {
         return {
             leaves: [],
-
+            filter: 'all', // Default filter status
         };
     },
     components: {
         TableDropdown,
     },
-
     mounted() {
         this.fetchLeaveRequest();
+    },
+    computed: {
+        filteredLeaves() {
+            if (this.filter === 'all') {
+                return this.leaves;
+            }
+            return this.leaves.filter(leave => leave.status === this.filter);
+        }
     },
     methods: {
         async fetchLeaveRequest() {
             try {
-                const response = await axios.get(' http://127.0.0.1:8000/api/leaves/list');
+                const response = await axios.get('http://127.0.0.1:8000/api/leaves/list');
                 this.leaves = response.data.data;
             } catch (error) {
-                console.error('Error fetching users:', error);
+                console.error('Error fetching leaves:', error);
             }
         },
+        filterHistories(status) {
+            this.filter = status;
+        }
     },
     props: {
         color: {
             default: "light",
             validator: function (value) {
-                // The value must match one of these strings
                 return ["light", "dark"].indexOf(value) !== -1;
             },
         },
