@@ -4,7 +4,7 @@ use App\Http\Controllers\Api\LeaveController as ApiLeaveController;
 use App\Http\Controllers\Api\TypeLeaveController;
 use App\Http\Controllers\DepartementController;
 use App\Http\Controllers\HistoryController;
-use App\Http\Controllers\LeaveController;
+use App\Http\Controllers\SubordinateController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -64,6 +64,6 @@ Route::post('/leave/cancel-request/{id}', [ApiLeaveController::class, 'cancelLea
 
 
 // ========================= Subodinate  =============================
-Route::get('/subordinates/list', [UserController::class, 'getSubordinates']);
-Route::post('/subordinate/assign', [UserController::class, 'assignSubordinate']);
-Route::delete('/subordinate/remove', [UserController::class, 'removeSubordinate']);
+Route::get('/subordinates/list', [SubordinateController::class, 'getSubordinates']);
+Route::post('/subordinate/assign', [SubordinateController::class, 'assignSubordinate']);
+Route::delete('/subordinate/remove', [SubordinateController::class, 'removeSubordinate']);

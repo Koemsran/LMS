@@ -55,10 +55,7 @@ const routes = [
         path: "/admin/dashboard",
         component: Dashboard,
       },
-      {
-        path: "/admin/settings",
-        component: Settings,
-      },
+      
       {   
         path: "/admin/tables",
         component: Tables,
@@ -136,6 +133,10 @@ const routes = [
   {
     path: "/profile",
     component: Profile,
+  },
+  {
+    path: "/admin/settings",
+    component: Settings,
   },
   {
     path: "/",

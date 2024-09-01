@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LeaveRequest;
 use App\Http\Resources\LeaveResource;
+use App\Models\History;
 use App\Models\Leave;
 use Illuminate\Http\Request;
 
@@ -33,7 +34,12 @@ class LeaveController extends Controller
      */
     public function store(LeaveRequest $request)
     {
-        Leave::store($request);
+        $leave = Leave::store($request);
+        History::create([
+            'leave_id' => $leave->id,
+            'user_id' => 1,
+            'created_at' => now(),
+        ]);
         return response()->json(['success'=> true, 'message'=> 'Leave created successfully'],201);
     }
 

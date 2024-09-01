@@ -76,17 +76,44 @@
                             {{ leave.email }}
                         </td>
                         <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 whitespace-nowrap p-4">
-                            <button class="bg-orange-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mr-3 rounded">
-                                Edit
-                            </button>
                             <button class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                Delete
+                                Remove
                             </button>
 
                         </td>
                     </tr>
                 </tbody>
             </table>
+        </div>
+        <!-- Add/Edit Department Modal -->
+        <div v-if="showAddTypeModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
+            <div class="bg-white p-6 rounded-lg shadow-lg" style="max-width: 800px; width: 100%;">
+                <h3 class="text-lg font-bold p-3">Add Subordinate</h3>
+                <!-- Form Start -->
+                <form @submit.prevent="saveType" class="p-3">
+                    <div class="mb-4">
+                        <select name="user" id="user"
+                            class="border py-2 px-4 w-full mt-1 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500">
+                            <option value="">Select User</option>
+                            <option v-for="user in users" :key="user.id" :value="user.id">
+                                {{ user.name }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="flex justify-end">
+                        <button type="submit"
+                            class="bg-emerald-600 text-white px-4 py-2 rounded hover:bg-emerald-700 mr-2">
+                            Save
+                        </button>
+                        <button type="button" @click="closeModal" style="background-color: red;"
+                            class="bg-gray-300 text-white px-4 py-2 rounded hover:bg-gray-400">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+
         </div>
     </div>
 </template>
@@ -96,10 +123,11 @@
 import team1 from "@/assets/img/me.jpg";
 import team2 from "@/assets/img/team-2-800x800.jpg";
 import team3 from "@/assets/img/team-3-800x800.jpg";
-
+import axios from "axios";
 export default {
     data() {
         return {
+            users: [],
             leaves: [
                 {
                     id: 1,
@@ -120,9 +148,27 @@ export default {
                     image: team3,
                 },
             ],
+            showAddTypeModal: false,
         };
     },
-
+    mounted() {
+        this.fetchUsers();
+    },
+    methods: {
+        closeModal() {
+            this.typeName = '';
+            this.typeId = null;
+            this.showAddTypeModal = false;
+        },
+        async fetchUsers() {
+            try {
+                const response = await axios.get('http://127.0.0.1:8000/api/users/list');
+                this.users = response.data.data;
+            } catch (error) {
+                console.error('Error fetching users:', error);
+            }
+        },
+    },
     props: {
         color: {
             default: "light",
