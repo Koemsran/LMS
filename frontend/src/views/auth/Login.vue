@@ -38,7 +38,7 @@
                 </label>
               </div>
               <div class="text-center mt-6">
-                <button :disabled="isSubmitting" :loading="isLoading"
+                <button
                   class="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
                   type="submit">Login</button>
               </div>
@@ -68,7 +68,6 @@ export default {
     const router = useRouter();
     const emailError = ref('');
     const passwordError = ref('');
-    const isLoading = ref(false)
     const form = ref({
       email: '',
       password: '',
@@ -76,11 +75,12 @@ export default {
 
     const submitLogin = async () => {
       try {
-        isLoading.value = true
-        await axiosInstance.post('http://127.0.0.1:8000/api/login', {
+        const response = await axiosInstance.post('http://127.0.0.1:8000/api/login', {
           email: form.value.email,
           password: form.value.password,
         });
+        console.log(response.data)
+        localStorage.setItem('authToken', response.data.access_token);
         router.push('/');
       } catch (error) {
         // Handle specific error messages
@@ -95,9 +95,6 @@ export default {
           console.warn('Error:', error)
         }
       }
-      finally {
-        isLoading.value = false
-      }
     };
 
     return {
@@ -105,7 +102,6 @@ export default {
       submitLogin,
       emailError,
       passwordError,
-      isLoading
     };
   }
 };

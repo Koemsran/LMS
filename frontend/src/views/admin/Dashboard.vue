@@ -23,6 +23,8 @@ import CardLineChart from "@/components/Cards/CardLineChart.vue";
 import CardBarChart from "@/components/Cards/CardBarChart.vue";
 import CardPageVisits from "@/components/Cards/CardPageVisits.vue";
 import CardSocialTraffic from "@/components/Cards/CardSocialTraffic.vue";
+import {ref, onMounted} from 'vue'
+import axios from "axios";
 export default {
   name: "dashboard-page",
   components: {
@@ -31,5 +33,25 @@ export default {
     CardPageVisits,
     CardSocialTraffic,
   },
+  setup() {
+    const user =ref()
+    onMounted(async () => {
+      try {
+        // Retrieve the token from localStorage or your preferred storage
+        const token = localStorage.getItem('authToken');
+        // Make the request with the token in the Authorization header
+        const response = await axios.get('http://127.0.0.1:8000/api/me', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        // Log the response data
+        user.value = response.data.data
+      } catch (error) {
+        // Handle any errors that occur during the request
+        console.error('Error fetching data:', error);
+      }
+    });
+  }
 };
 </script>
