@@ -24,8 +24,7 @@ class User extends Authenticatable
         'email',
         'password',
         'profile',
-        'role_id',
-        'departement_id',
+        'leave_balance'
     ];
 
     /**
@@ -53,7 +52,7 @@ class User extends Authenticatable
         return $this->belongsTo(Departement::class, 'departement_id');
     }
     public static function store($request, $id = null){
-        $data = $request->only('name', 'email', 'password', 'role_id', 'departement_id');
+        $data = $request->only('name', 'email', 'password','leave_balance');
         if ($request->hasFile('profile')) {
             $imageName = time() . '.' . $request->file('profile')->extension();
             $request->file('profile')->storeAs('public/images', $imageName); 

@@ -41,7 +41,6 @@ import Register from "@/views/auth/Register.vue";
 
 import Landing from "@/views/Landing.vue";
 import Profile from "@/views/Profile.vue";
-import Index from "@/views/Index.vue";
 
 // routes
 
@@ -55,7 +54,10 @@ const routes = [
         path: "/admin/dashboard",
         component: Dashboard,
       },
-      
+      {
+        path: "/",
+        component: Dashboard,
+      },
       {   
         path: "/admin/tables",
         component: Tables,
@@ -67,17 +69,17 @@ const routes = [
     redirect: "/auth/login",
     component: Auth,
     children: [
-      {
-        path: "/auth/login",
-        component: Login,
-      },
+      
       {
         path: "/auth/register",
         component: Register,
       },
     ],
   },
-
+  {
+    path: "/auth/login",
+    component: Login,
+  },
   {
     path: "/admin/approvals",
     component: Approvals,
@@ -138,10 +140,7 @@ const routes = [
     path: "/admin/settings",
     component: Settings,
   },
-  {
-    path: "/",
-    component: Index,
-  },
+  
   { path: "/:pathMatch(.*)*", redirect: "/" },
 ];
 

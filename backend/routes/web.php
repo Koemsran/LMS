@@ -1,25 +1,23 @@
 <?php
 
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\PermissionController;
-use App\Http\Controllers\LoginController;
-use App\Http\Controllers\RoleController;
 
-Route::resource('permissions', PermissionController::class);
-Route::resource('roles', RoleController::class);
-Route::get('permissions/{id}/delete', [PermissionController::class,'destroy']);
-Route::get('roles/{id}/delete', [RoleController::class,'destroy']);
-Route::get('roles/{id}/give-permissions', [RoleController::class, 'addPermission']);
-Route::put('roles/{id}/give-permissions', [RoleController::class, 'updatePermission']);
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
+|
+*/
 
 Route::get('/', function () {
-    return view('menus.dashboard');
+    return ['Laravel' => app()->version()];
 });
 
-Route::get('/dashboard', function () {
-    return view('menus.dashboard');
-});
+require __DIR__.'/auth.php';
+Route::post('/login', [AuthenticatedSessionController::class, 'store'])->middleware('guest');
 
-
-
-Route::post('/login', [LoginController::class, 'login']);

@@ -1,7 +1,9 @@
 <?php
 
-use App\Http\Controllers\Api\LeaveController as ApiLeaveController;
+use App\Http\Controllers\Api\LeaveController;
 use App\Http\Controllers\Api\TypeLeaveController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DepartementController;
 use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\SubordinateController;
@@ -15,14 +17,22 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 |
 | Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
+| routes are loaded by the RouteServiceProvider within a group which
+| is assigned the "api" middleware group. Enjoy building your API!
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
 });
+
+//======================= Authentication ======================
+// Route::post('/login', [AuthenticatedSessionController::class, 'store']);
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/register', [AuthController::class, 'register']);
+Route::put('/customers/{id}/role', [AuthController::class, 'updateRole']);
+Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+Route::get('/me', [AuthController::class, 'index'])->middleware('auth:sanctum');
 
 // ========================= Users =============================
 Route::get('/users/list', [UserController::class, 'index']);
@@ -39,11 +49,11 @@ Route::put('/type-leave/update/{id}', [TypeLeaveController::class, 'update']);
 Route::delete('/type-leave/delete/{id}', [TypeLeaveController::class, 'destroy']);
 
 // ===================== Leave Request  =========================
-Route::get('/leaves/list', [ApiLeaveController::class, 'index']);
-Route::post('/leave/request', [ApiLeaveController::class, 'store']);
-Route::get('/leave/show/{id}', [ApiLeaveController::class, 'show']);
-Route::put('/leave/update/{id}', [ApiLeaveController::class, 'update']);
-Route::delete('/leave/delete/{id}', [ApiLeaveController::class, 'destroy']);
+Route::get('/leaves/list', [LeaveController::class, 'index']);
+Route::post('/leave/request', [LeaveController::class, 'store']);
+Route::get('/leave/show/{id}', [LeaveController::class, 'show']);
+Route::put('/leave/update/{id}', [LeaveController::class, 'update']);
+Route::delete('/leave/delete/{id}', [LeaveController::class, 'destroy']);
 
 // ===================== Departement  =========================
 Route::get('/departements/list', [DepartementController::class, 'index']);
@@ -58,10 +68,9 @@ Route::post('/history/create', [HistoryController::class, 'store']);
 Route::delete('/history/delete/{id}', [HistoryController::class, 'destroy']);
 
 // ========================= Leave Status  =============================
-Route::post('/leave/approve/{id}', [ApiLeaveController::class, 'approveLeave']);
-Route::post('/leave/reject/{id}', [ApiLeaveController::class, 'rejectLeave']);
-Route::post('/leave/cancel-request/{id}', [ApiLeaveController::class, 'cancelLeaveRequest']);
-
+Route::post('/leave/approve/{id}', [LeaveController::class, 'approveLeave']);
+Route::post('/leave/reject/{id}', [LeaveController::class, 'rejectLeave']);
+Route::post('/leave/cancel-request/{id}', [LeaveController::class, 'cancelLeaveRequest']);
 
 // ========================= Subodinate  =============================
 Route::get('/subordinates/list', [SubordinateController::class, 'getSubordinates']);
