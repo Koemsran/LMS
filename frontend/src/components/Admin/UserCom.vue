@@ -59,6 +59,15 @@
                   ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
                   : 'bg-emerald-800 text-emerald-300 border-emerald-700',
               ]">
+              Leave Balance
+            </th>
+            <th
+              class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
+              :class="[
+                color === 'light'
+                  ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
+                  : 'bg-emerald-800 text-emerald-300 border-emerald-700',
+              ]">
               Role
             </th>
             <th
@@ -80,7 +89,6 @@
               ]">
               Action
             </th>
-
           </tr>
         </thead>
         <tbody>
@@ -90,28 +98,26 @@
               {{ user.id }}
             </td>
             <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 whitespace-nowrap p-4">
-              <img src="@/assets/img/me.jpg" class="h-12 w-12 bg-white rounded-full border" alt="..." />
+              <img :src="`http://127.0.0.1:8000/storage/${user.profile}`" class="h-12 w-12 bg-white rounded-full border" alt="..." />
             </td>
-            <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 whitespace-nowrap p-4">
+            <td class="border-t-0 px-6 text-sm align-middle border-l-0 border-r-0 whitespace-nowrap p-4">
               {{ user.name }}
             </td>
-            <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 whitespace-nowrap p-4">
+            <td class="border-t-0 px-6 text-sm align-middle border-l-0 border-r-0 whitespace-nowrap p-4">
               {{ user.email }}
             </td>
-            <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 whitespace-nowrap p-4">
+            <td class="border-t-0 px-6 text-sm align-middle border-l-0 border-r-0 whitespace-nowrap p-4">
+              {{ user.leave_balance }}
+            </td>
+            <td class="border-t-0 px-6 text-sm align-middle border-l-0 border-r-0 whitespace-nowrap p-4">
               {{ user.role }}
             </td>
-            <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 whitespace-nowrap p-4">
+            <td class="border-t-0 px-6 text-sm align-middle border-l-0 border-r-0 whitespace-nowrap p-4">
               {{ user.departement }}
             </td>
             <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 whitespace-nowrap p-4">
-              <button class="bg-orange-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mr-3 rounded">
-                Edit
-              </button>
-              <button class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                Delete
-              </button>
-
+              <i style="color: orange" class="fas fa-edit text-lg mr-3"></i>
+              <i style="color: red" class="fas fa-trash text-lg"></i>
             </td>
           </tr>
         </tbody>

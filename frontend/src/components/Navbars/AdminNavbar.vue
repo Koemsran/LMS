@@ -93,101 +93,125 @@
 </template>
 
 <script>
-import UserDropdown from "@/components/Dropdowns/UserDropdown.vue";
-import axios from "axios";
+import { ref, watch, onMounted } from 'vue';
+import axios from 'axios';
+import UserDropdown from '@/components/Dropdowns/UserDropdown.vue';
 
 export default {
   components: {
     UserDropdown,
   },
-  data() {
-    return {
-      showPopup: false,
-      form: {
-        duration: '', // Initially empty, will be calculated
-        type: '', // Default to empty string
-        dateFrom: '',
-        dateTo: '',
-        reason: '',
-      },
-      leaveTypes: [],
-    };
-  },
-  mounted() {
-    this.fetchTypes();
-  },
-  watch: {
-    'form.dateFrom': 'calculateDuration',
-    'form.dateTo': 'calculateDuration',
-  },
-  methods: {
-    async fetchTypes() {
+  setup() {
+    const showPopup = ref(false);
+    const userId = ref(null);
+    const form = ref({
+      duration: '', // Initially empty, will be calculated
+      type: '', // Default to empty string
+      dateFrom: '',
+      dateTo: '',
+      reason: '',
+    });
+    const leaveTypes = ref([]);
+
+    const fetchTypes = async () => {
       try {
         const response = await axios.get('http://127.0.0.1:8000/api/type-leave/list');
-        this.leaveTypes = response.data.data;
+        leaveTypes.value = response.data.data;
       } catch (error) {
         console.error('Error fetching leave types:', error);
       }
-    },
-    calculateDuration() {
-      if (this.form.dateFrom && this.form.dateTo) {
-        const fromDate = new Date(this.form.dateFrom);
-        const toDate = new Date(this.form.dateTo);
+    };
+
+    const calculateDuration = () => {
+      if (form.value.dateFrom && form.value.dateTo) {
+        const fromDate = new Date(form.value.dateFrom);
+        const toDate = new Date(form.value.dateTo);
 
         if (fromDate > toDate) {
-          this.form.dateTo = this.form.dateFrom; // Reset to avoid invalid range
-          this.form.duration = ''; // Reset duration
+          form.value.dateTo = form.value.dateFrom; // Reset to avoid invalid range
+          form.value.duration = ''; // Reset duration
         } else {
           const duration = Math.ceil((toDate - fromDate) / (1000 * 60 * 60 * 24)) + 1; // Duration in days
-          this.form.duration = duration;
+          form.value.duration = duration;
         }
       }
-    },
-    validateDates() {
+    };
+
+    const validateDates = () => {
       const today = new Date().toISOString().split('T')[0]; // Current date in YYYY-MM-DD format
       let isValid = true;
 
-      if (this.form.dateFrom < today) {
+      if (form.value.dateFrom < today) {
         alert('Date From cannot be earlier than today.');
-        this.form.dateFrom = today; // Reset to today's date
+        form.value.dateFrom = today; // Reset to today's date
         isValid = false;
       }
-      if (this.form.dateTo < this.form.dateFrom) {
+      if (form.value.dateTo < form.value.dateFrom) {
         alert('Date To cannot be earlier than Date From.');
-        this.form.dateTo = this.form.dateFrom; // Reset to Date From
+        form.value.dateTo = form.value.dateFrom; // Reset to Date From
         isValid = false;
       }
 
       return isValid;
-    },
-    async submitForm() {
-      if (this.validateDates()) { // Validate dates before submission
+    };
+
+    const submitForm = async () => {
+      if (validateDates()) { // Validate dates before submission
         try {
           await axios.post('http://127.0.0.1:8000/api/leave/request', {
-            user_id: 1, // Update with actual user ID
-            leave_type_id: this.form.type,
-            date_from: this.form.dateFrom,
-            date_to: this.form.dateTo,
-            duration: this.form.duration,
-            reason: this.form.reason
+            user_id: userId.value,
+            leave_type_id: form.value.type,
+            date_from: form.value.dateFrom,
+            date_to: form.value.dateTo,
+            duration: form.value.duration,
+            reason: form.value.reason
           });
-          this.clearForm(); // Clear the form after successful submission
-          this.showPopup = false;
+          clearForm(); // Clear the form after successful submission
+          showPopup.value = false;
         } catch (error) {
           console.error('Error submitting leave request:', error);
         }
       }
-    },
-    clearForm() {
-      this.form = {
+    };
+
+    const clearForm = () => {
+      form.value = {
         duration: '', 
         type: '', 
         dateFrom: '',
         dateTo: '',
         reason: '',
       };
-    },
-  },
+    };
+
+    // Fetch userId and leave types when component is mounted
+    onMounted(async () => {
+      try {
+        const token = localStorage.getItem('authToken');
+        const response = await axios.get('http://127.0.0.1:8000/api/me', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        userId.value = response.data.data.id; 
+        fetchTypes();
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    });
+
+    // Watch dateFrom and dateTo to recalculate duration when they change
+    watch([() => form.value.dateFrom, () => form.value.dateTo], calculateDuration);
+
+    return {
+      showPopup,
+      userId,
+      form,
+      leaveTypes,
+      calculateDuration,
+      submitForm,
+    };
+  }
 };
 </script>
 

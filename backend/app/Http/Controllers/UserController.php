@@ -17,6 +17,7 @@ class UserController extends Controller
         $users = User::all();
         $users = UserResource::collection($users);
         return response()->json(['sucess'=> true, "data"=>$users ],200);
+
     }
 
     /**

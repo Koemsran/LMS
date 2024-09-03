@@ -8,15 +8,15 @@
         hidden: !dropdownPopoverShow,
         block: dropdownPopoverShow,
       }">
-      <button @click="approvedStatus(1)"
+      <button @click="approvedStatus(requestId)"
         class="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-emerald-500 text-bold">
         Approve
       </button>
-      <button @click="rejectedStatus(1)"
+      <button @click="rejectedStatus(requestId)"
         class="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-red-500 text-bold">
         Reject
       </button>
-      <button @click="deletedStatus(1)"
+      <button @click="deletedStatus(requestId)"
         class="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-red-500 text-bold">
         Delete
       </button>
@@ -27,6 +27,12 @@
 import { createPopper } from "@popperjs/core";
 import axios from "axios";
 export default {
+  prop:{
+    requestId: {
+      type: Number,
+      required: true
+    }
+  },
   data() {
     return {
       dropdownPopoverShow: false,

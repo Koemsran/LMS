@@ -48,6 +48,14 @@
                             ]">
                             Email
                         </th>
+                        <th class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
+                            :class="[
+                                color === 'light'
+                                    ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
+                                    : 'bg-emerald-800 text-emerald-300 border-emerald-700',
+                            ]">
+                            Leave Balance
+                        </th>
 
                         <th class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
                             :class="[
@@ -70,16 +78,16 @@
                             <img :src="leave.image" class="h-12 w-12 bg-white rounded-full border" alt="..." />
                         </td>
                         <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 whitespace-nowrap p-4">
-                            {{ leave.fullName }}
+                            {{ leave.name }}
                         </td>
                         <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 whitespace-nowrap p-4">
                             {{ leave.email }}
                         </td>
                         <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 whitespace-nowrap p-4">
-                            <button class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                Remove
-                            </button>
-
+                            {{ leave.leave_balance }}
+                        </td>
+                        <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 whitespace-nowrap p-4">
+                            <i style="color: red" class="fas fa-trash text-lg"></i>
                         </td>
                     </tr>
                 </tbody>
@@ -131,20 +139,23 @@ export default {
             leaves: [
                 {
                     id: 1,
-                    fullName: "Koemsran Phon",
+                    name: "Koemsran Phon",
                     email: "koemsran@gmail.com",
+                    leave_balance:2,
                     image: team1,
                 },
                 {
                     id: 2,
-                    fullName: "Sreyvoath Voeun",
+                    name: "Sreyvoath Voeun",
                     email: "sreyvoath@gmail.com",
+                    leave_balance:2,
                     image: team2,
                 },
                 {
                     id: 3,
-                    fullName: "Layhor Met",
+                    name: "Layhor Met",
                     email: "layhor@gmail.com",
+                    leave_balance:2,
                     image: team3,
                 },
             ],

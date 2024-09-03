@@ -17,13 +17,6 @@
                 </button>
                 <button
                   class="py-2 px-4 rounded focus:outline-none"
-                  :class="{ 'bg-red-500 text-white': filter === 'pending', 'border border-red-500': filter !== 'pending' }"
-                  @click="filterHistories('pending')"
-                >
-                  Pending
-                </button>
-                <button
-                  class="py-2 px-4 rounded focus:outline-none"
                   :class="{ 'bg-red-500 text-white': filter === 'approved', 'border border-red-500': filter !== 'approved' }"
                   @click="filterHistories('approved')"
                 >
@@ -180,7 +173,7 @@ export default {
   computed: {
     filteredHistories() {
       if (this.filter === 'all') {
-        return this.leavesHistories;
+        return this.leavesHistories.filter(leave => leave.status !== 'pending');
       }
       return this.leavesHistories.filter(leave => leave.status === this.filter);
     }
