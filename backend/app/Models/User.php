@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Support\Facades\Hash;
 
 class User extends Authenticatable
 {
@@ -45,19 +46,30 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
     public function role(){
         return $this->belongsTo(Role::class, 'role_id');
     }
+
     public function departement(){
         return $this->belongsTo(Departement::class, 'departement_id');
     }
+
     public static function store($request, $id = null){
-        $data = $request->only('name', 'email', 'password','leave_balance');
+        $data = $request->only('name', 'email', 'password', 'leave_balance');
+        
+        // Hash the password if it is present in the request
+        if (isset($data['password'])) {
+            $data['password'] = Hash::make($data['password']);
+        }
+
         if ($request->hasFile('profile')) {
             $imageName = time() . '.' . $request->file('profile')->extension();
             $request->file('profile')->storeAs('public/images', $imageName); 
             $data['profile'] = 'images/' . $imageName; 
         }
+
+        // Use updateOrCreate to either update existing record or create a new one
         $data = self::updateOrCreate(['id' => $id], $data);
         return $data;
     }

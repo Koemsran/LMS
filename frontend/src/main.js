@@ -149,4 +149,16 @@ const router = createRouter({
   routes,
 });
 
+router.beforeEach((to, from, next) => {
+  const publicRoutes = ['/auth/login', '/auth/register'];
+  const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+
+  if (publicRoutes.includes(to.path)) {
+    next(); // Allow navigation to public routes
+  } else if (isAuthenticated) {
+    next(); // Allow navigation if authenticated
+  } else {
+    next('/auth/login'); // Redirect to login if not authenticated
+  }
+});
 createApp(App).use(router).mount("#app");

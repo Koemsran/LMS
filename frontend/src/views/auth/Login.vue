@@ -81,6 +81,7 @@ export default {
         });
         console.log(response.data)
         localStorage.setItem('authToken', response.data.access_token);
+        localStorage.setItem('isAuthenticated', 'true'); 
         router.push('/');
       } catch (error) {
         // Handle specific error messages

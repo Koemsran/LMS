@@ -47,11 +47,16 @@ export default {
         });
         // Log the response data
         user.value = response.data.data
+        localStorage.setItem('userAuth',response.data.data);
       } catch (error) {
         // Handle any errors that occur during the request
         console.error('Error fetching data:', error);
       }
     });
+    return {
+      user,
+      
+    }
   }
 };
 </script>
