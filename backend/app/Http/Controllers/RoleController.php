@@ -15,10 +15,24 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $roles = Role::all(); // Fetch all roles
-        return view('menus.roles.index', [
-            'roles' => $roles
-        ]);
+        // Fetch all roles with their permissions
+        $roles = Role::with('permissions')->get();
+
+        // Prepare the data to be returned
+        $data = $roles->map(function ($role) {
+            return [
+                'id' => $role->id,
+                'name' => $role->name,
+                'permissions' => $role->permissions->map(function ($permission) {
+                    return [
+                        'id' => $permission->id,    // Include permission ID
+                        'name' => $permission->name // Include permission name
+                    ];
+                })
+            ];
+        });
+
+        return response()->json(['success' => true, 'data' => $data]);
     }
 
     /**
@@ -48,7 +62,7 @@ class RoleController extends Controller
             'name' => $request->name
         ]);
 
-        return redirect('roles')->with('status', 'Role created successfully.');
+        return response()->json(['success' => true, 'message' => 'Role created successfully']);
     }
 
     /**
@@ -72,23 +86,28 @@ class RoleController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Role $role)
+    public function update(Request $request, string $id)
     {
         $request->validate([
             'name' => [
                 'required',
                 'string',
                 'max:255',
-                'unique:roles,name,' . $role->id
+                'unique:roles,name,'
             ]
         ]);
 
         // Update the role
-        $role->update([
-            'name' => $request->name
-        ]);
+        $role = Role::find($id);
+        if ($role) {
+            $role->update([
+                'name' => $request->name
+            ]);
 
-        return redirect('roles')->with('status', 'Role updated successfully.');
+            return response()->json(['success' => true, 'message' => 'Role updated successfully']);
+        } else {
+            return response()->json(['error' => true, 'message' => 'Role not found'], 404);
+        }
     }
 
     /**
@@ -96,34 +115,61 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
-        Role::find($id)->delete();
-        return redirect('roles')->with('status', 'Role deleted successfully.');
+        $role = Role::find($id);
+        $role->delete();
+        return response()->json(['success' => true, 'message' => 'Role deleted successfully']);
     }
 
     /**
      * Show the form for adding permissions to a role.
      */
-    public function addPermission($id)
+    public function updatePermissions(Request $request, $roleId)
     {
-        $permissions = Permission::all(); // Fetch all permissions
-        $role = Role::findOrFail($id);
-        $rolePermissions = DB::table('role_has_permissions')
-                               ->where('role_has_permissions.role_id', $role->id)
-                               ->pluck('role_has_permissions.permission_id', 'role_has_permissions.permission_id')
-                               ->all();
-        return view('menus.roles.add-permission', [
-            'role' => $role,
-            'permissions' => $permissions,
-            'rolePermissions' =>$rolePermissions
-        ]);
-    }
-    public function updatePermission(Request $request, $id)
-    {
+        // Validate the request
         $request->validate([
-            'permission' => 'required'
+            'permission_ids' => 'required|array',
+            'permission_ids.*' => 'exists:permissions,id'
         ]);
-        $role = Role::findOrFail($id);
-        $role->syncPermissions($request->permission);
-        return redirect()->back()->with('status', 'Permissions updated successfully.');
+
+        $permissionIds = $request->input('permission_ids');
+
+        // Find the role
+        $role = Role::findOrFail($roleId);
+
+        // Remove all existing permissions from the role
+        $role->permissions()->detach();
+
+        // Loop through each permission ID
+        foreach ($permissionIds as $permissionId) {
+            // Find the permission
+            $permission = Permission::findOrFail($permissionId);
+
+            // Assign permission to the role
+            $role->givePermissionTo($permission);
+        }
+
+        // Retrieve the updated list of permissions for the role
+        $rolePermissions = $role->permissions->map(function ($permission) {
+            return [
+                'id' => $permission->id,
+                'name' => $permission->name
+            ];
+        });
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Permissions updated successfully',
+            'rolePermissions' => $rolePermissions
+        ]);
     }
+
+    // public function updatePermission(Request $request, $id)
+    // {
+    //     $request->validate([
+    //         'permission' => 'required'
+    //     ]);
+    //     $role = Role::findOrFail($id);
+    //     $role->syncPermissions($request->permission);
+    //     return redirect()->back()->with('status', 'Permissions updated successfully.');
+    // }
 }

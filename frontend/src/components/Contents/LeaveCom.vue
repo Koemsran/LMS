@@ -134,13 +134,18 @@
                                 {{ leave.reason }}
                             </td>
                             <td class="border-t-0 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                                <a @click="cancelLeaveRequest(leave.id)" class="text-red-500 hover:text-blue-700 mr-4" title="Cancel">
+                                    <i class="fas fa-times text-2xl" style="color: red"></i>
+                                </a>
+                            </td>
+                            <!-- <td class="border-t-0 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                                 <a href="#" class="text-blue-500 hover:text-blue-700 mr-4" title="View">
                                     <i class="fas fa-eye text-lg" style="color: #006ca5"></i>
                                 </a>
                                 <a href="#" class="text-yellow-500 hover:text-yellow-700" title="Edit">
                                     <i class="fas fa-edit text-lg" style="color: orange"></i>
                                 </a>
-                            </td>
+                            </td> -->
                         </tr>
                     </tbody>
 
@@ -259,11 +264,21 @@ export default {
                 console.error('Error fetching leaves:', error);
             }
         };
+        // Fetch leave requests
+        const cancelLeaveRequest = async (id) => {
+            try {
+                await axios.post(`http://127.0.0.1:8000/api/leave/cancel-request/${id}`);
+                await fetchLeaveRequest();
+            } catch (error) {
+                console.error('Error caceling leave request:', error);
+            }
+        };
 
         // Filter leaves based on the selected status
         const filteredLeaves = computed(() => {
             if (filter.value === 'all') {
-                return leaves.value.filter(leave => leave.user_id === userId.value);
+                return leaves.value.filter(leave => leave.status == 'pending');
+                // return leaves.value.filter(leave => leave.user_id === userId.value);
             }
             return leaves.value.filter(leave => leave.status === filter.value && leave.user_id === userId.value);
         });
@@ -293,7 +308,8 @@ export default {
             userId,
             filteredLeaves,
             filterHistories,
-            submitForm
+            submitForm,
+            cancelLeaveRequest
         };
     }
 };

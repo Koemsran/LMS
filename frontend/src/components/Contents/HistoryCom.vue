@@ -1,164 +1,157 @@
 <template>
-    <div class="min-h-screen flex flex-col">
-      <!-- Main Content -->
-      <main class="flex-grow p-4 bg-gray-100">
-        <div class="max-w-7xl mx-auto p-4">
-          <div class="block w-full overflow-x-auto">
-            <h2 class="text-2xl font-bold mb-6">Leave History</h2>
-            <!-- Tabs -->
-            <div class="mb-4">
-              <div class="flex space-x-2">
-                <button
-                  class="py-2 px-4 rounded focus:outline-none"
-                  :class="{ 'bg-red-500 text-white': filter === 'all', 'border border-red-500': filter !== 'all' }"
-                  @click="filterHistories('all')"
-                >
-                  All
-                </button>
-                <button
-                  class="py-2 px-4 rounded focus:outline-none"
-                  :class="{ 'bg-red-500 text-white': filter === 'approved', 'border border-red-500': filter !== 'approved' }"
-                  @click="filterHistories('approved')"
-                >
-                  Approved
-                </button>
-                <button
-                  class="py-2 px-4 rounded focus:outline-none"
-                  :class="{ 'bg-red-500 text-white': filter === 'rejected', 'border border-red-500': filter !== 'rejected' }"
-                  @click="filterHistories('rejected')"
-                >
-                  Rejected
-                </button>
-                <button
-                  class="py-2 px-4 rounded focus:outline-none"
-                  :class="{ 'bg-red-500 text-white': filter === 'cancelled', 'border border-red-500': filter !== 'cancelled' }"
-                  @click="filterHistories('cancelled')"
-                >
-                  Cancelled
-                </button>
-              </div>
+  <div class="min-h-screen flex flex-col">
+    <!-- Main Content -->
+    <main class="flex-grow p-4 bg-gray-100">
+      <div class="max-w-7xl mx-auto p-4">
+        <div class="block w-full overflow-x-auto">
+          <h2 class="text-2xl font-bold mb-6">Leave History</h2>
+          <!-- Tabs -->
+          <div class="mb-4">
+            <div class="flex space-x-2">
+              <button class="py-2 px-4 rounded focus:outline-none"
+                :class="{ 'bg-red-500 text-white': filter === 'all', 'border border-red-500': filter !== 'all' }"
+                @click="filterHistories('all')">
+                All
+              </button>
+              <button class="py-2 px-4 rounded focus:outline-none"
+                :class="{ 'bg-red-500 text-white': filter === 'approved', 'border border-red-500': filter !== 'approved' }"
+                @click="filterHistories('approved')">
+                Approved
+              </button>
+              <button class="py-2 px-4 rounded focus:outline-none"
+                :class="{ 'bg-red-500 text-white': filter === 'rejected', 'border border-red-500': filter !== 'rejected' }"
+                @click="filterHistories('rejected')">
+                Rejected
+              </button>
+              <button class="py-2 px-4 rounded focus:outline-none"
+                :class="{ 'bg-red-500 text-white': filter === 'cancelled', 'border border-red-500': filter !== 'cancelled' }"
+                @click="filterHistories('cancelled')">
+                Cancelled
+              </button>
             </div>
-            <!-- Projects table -->
-            <table class="items-center w-full bg-transparent border-collapse">
-              <thead>
-                <tr>
-                  <th class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
-                      :class="[
-                          color === 'light'
-                              ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
-                              : 'bg-emerald-800 text-emerald-300 border-emerald-700',
-                      ]">
-                      #
-                  </th>
-                  <th class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
-                      :class="[
-                          color === 'light'
-                              ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
-                              : 'bg-emerald-800 text-emerald-300 border-emerald-700',
-                      ]">
-                      Leave Type
-                  </th>
-                  <th class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
-                      :class="[
-                          color === 'light'
-                              ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
-                              : 'bg-emerald-800 text-emerald-300 border-emerald-700',
-                      ]">
-                      Date From
-                  </th>
-                  <th class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
-                      :class="[
-                          color === 'light'
-                              ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
-                              : 'bg-emerald-800 text-emerald-300 border-emerald-700',
-                      ]">
-                      Date To
-                  </th>
-                  <th class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
-                      :class="[
-                          color === 'light'
-                              ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
-                              : 'bg-emerald-800 text-emerald-300 border-emerald-700',
-                      ]">
-                      Status
-                  </th>
-                  <th class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
-                      :class="[
-                          color === 'light'
-                              ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
-                              : 'bg-emerald-800 text-emerald-300 border-emerald-700',
-                      ]">
-                      Reason
-                  </th>
-                  <th class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
-                      :class="[
-                          color === 'light'
-                              ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
-                              : 'bg-emerald-800 text-emerald-300 border-emerald-700',
-                      ]">
-                      Requested Date
-                  </th>
-                  <th class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
-                      :class="[
-                          color === 'light'
-                              ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
-                              : 'bg-emerald-800 text-emerald-300 border-emerald-700',
-                      ]">
-                      Action
-                  </th>
-                  <th class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
-                      :class="[
-                          color === 'light'
-                              ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
-                              : 'bg-emerald-800 text-emerald-300 border-emerald-700',
-                      ]"></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="leave in filteredHistories" :key="leave.id">
-                  <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 whitespace-nowrap p-4">
-                      {{ leave.id }}
-                  </td>
-                  <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 whitespace-nowrap p-4">
-                      {{ leave.leave_type }}
-                  </td>
-                  <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 whitespace-nowrap p-4">
-                      {{ leave.date_from }}
-                  </td>
-                  <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 whitespace-nowrap p-4">
-                      {{ leave.date_to }}
-                  </td>
-                  <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 whitespace-nowrap p-4">
-                      <i :class="[
-                          leave.status === 'rejected' ? 'fas fa-circle text-red-500 mr-2' :
-                          leave.status === 'pending' ? 'fas fa-circle text-orange-500 mr-2' :
-                          leave.status === 'cancelled' ? 'fas fa-circle text-red-500 mr-2' :
-                          'fas fa-circle text-emerald-500 mr-2'
-                      ]"></i>
-                      {{ leave.status }}
-                  </td>
-                  <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 whitespace-nowrap p-4">
-                      {{ leave.reason }}
-                  </td>
-                  <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 whitespace-nowrap p-4">
-                      {{ leave.created_at }}
-                  </td>
-                  <td class="border-t-0 px-6 align-middle border-l-0 border-r-0  whitespace-nowrap p-4">
-                      <button @click="deleteHistory(leave.id)" class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                          Delete
-                      </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
           </div>
+          <!-- Projects table -->
+          <table class="items-center w-full border-collapse">
+            <thead>
+              <tr>
+                <th
+                  class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
+                  :class="[
+                    color === 'light'
+                      ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
+                      : 'bg-emerald-800 text-emerald-300 border-emerald-700',
+                  ]">
+                  Leave Type
+                </th>
+                <th
+                  class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
+                  :class="[
+                    color === 'light'
+                      ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
+                      : 'bg-emerald-800 text-emerald-300 border-emerald-700',
+                  ]">
+                  Date From
+                </th>
+                <th
+                  class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
+                  :class="[
+                    color === 'light'
+                      ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
+                      : 'bg-emerald-800 text-emerald-300 border-emerald-700',
+                  ]">
+                  Date To
+                </th>
+                <th
+                  class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
+                  :class="[
+                    color === 'light'
+                      ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
+                      : 'bg-emerald-800 text-emerald-300 border-emerald-700',
+                  ]">
+                  Status
+                </th>
+                <th
+                  class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
+                  :class="[
+                    color === 'light'
+                      ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
+                      : 'bg-emerald-800 text-emerald-300 border-emerald-700',
+                  ]">
+                  Reason
+                </th>
+                <th
+                  class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
+                  :class="[
+                    color === 'light'
+                      ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
+                      : 'bg-emerald-800 text-emerald-300 border-emerald-700',
+                  ]">
+                  Requested
+                </th>
+                <th
+                  class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
+                  :class="[
+                    color === 'light'
+                      ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
+                      : 'bg-emerald-800 text-emerald-300 border-emerald-700',
+                  ]">
+                  Action
+                </th>
+                <th
+                  class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
+                  :class="[
+                    color === 'light'
+                      ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
+                      : 'bg-emerald-800 text-emerald-300 border-emerald-700',
+                  ]"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="leave in filteredHistories" :key="leave.id">
+                <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 whitespace-nowrap p-4">
+                  {{ leave.leave_type }}
+                </td>
+                <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 whitespace-nowrap p-4">
+                  {{ leave.date_from }}
+                </td>
+                <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 whitespace-nowrap p-4">
+                  {{ leave.date_to }}
+                </td>
+                <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 whitespace-nowrap p-4">
+                  <i :class="[
+                    leave.status === 'rejected' ? 'fas fa-circle text-red-500 mr-2' :
+                      leave.status === 'pending' ? 'fas fa-circle text-orange-500 mr-2' :
+                        leave.status === 'cancelled' ? 'fas fa-circle text-red-500 mr-2' :
+                          'fas fa-circle text-emerald-500 mr-2'
+                  ]"></i>
+                  {{ leave.status }}
+                </td>
+                <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 whitespace-nowrap p-4">
+                  {{ leave.reason }}
+                </td>
+                <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 whitespace-nowrap p-4">
+                  {{ leave.created_at }}
+                </td>
+                <td class="border-t-0 px-6 align-middle border-l-0 border-r-0  whitespace-nowrap p-4">
+
+                  <a href="#" class="text-blue-500 hover:text-blue-700 mr-4" title="View">
+                    <i class="fas fa-eye text-lg" style="color: #006ca5"></i>
+                  </a>
+                  <a @click="deleteHistory(leave.id)" class="text-yellow-500 hover:text-yellow-700" title="Edit">
+                    <i class="fas fa-trash text-lg" style="color: red"></i>
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-      </main>
-    </div>
-  </template>
-  
-  
-  <script>
+      </div>
+    </main>
+  </div>
+</template>
+
+
+<script>
 import axios from 'axios';
 export default {
   data() {
@@ -167,7 +160,7 @@ export default {
       filter: 'all' // Default filter
     };
   },
-  mounted(){
+  mounted() {
     this.fetchHistories();
   },
   computed: {
@@ -201,5 +194,3 @@ export default {
   }
 };
 </script>
-
-  

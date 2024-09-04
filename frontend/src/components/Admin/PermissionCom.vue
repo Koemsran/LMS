@@ -1,128 +1,167 @@
 <template>
-    <div class="p-6 bg-white shadow-lg rounded-lg">
-      <h2 class="text-2xl font-bold mb-4">Permission Management</h2>
-  
-      <!-- Add Permission Form -->
-      <div class="mb-4">
-        <input
-          v-model="newPermissionName"
-          type="text"
-          placeholder="Enter new permission name"
-          class="p-2 border border-gray-300 rounded"
-        />
-        <button
-          @click="addPermission"
-          class="bg-emerald-600 text-white px-4 py-2 rounded hover:bg-emerald-700 ml-2"
-        >
-          Add Permission
-        </button>
-      </div>
-  
-      <!-- Permissions Table -->
-      <table class="min-w-full divide-y divide-gray-200">
-        <thead class="bg-gray-100">
-          <tr>
-            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
-              Permission Name
-            </th>
-            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
-              Actions
-            </th>
-          </tr>
-        </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
-          <tr v-for="permission in permissions" :key="permission.id">
-            <td class="px-6 py-4 text-sm text-gray-900">{{ permission.name }}</td>
-            <td class="px-6 py-4 text-sm text-gray-500">
-              <button
-                @click="editPermission(permission.id)"
-                class="text-indigo-600 hover:text-indigo-900 mr-2"
-              >
-                Edit
-              </button>
-              <button
-                @click="deletePermission(permission.id)"
-                class="text-red-600 hover:text-red-900"
-              >
-                Delete
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-  
-      <!-- Edit Permission Modal -->
-      <div v-if="editingPermission" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center">
-        <div class="bg-white p-6 rounded-lg shadow-lg">
-          <h3 class="text-xl font-bold mb-4">Edit Permission</h3>
-          <input
-            v-model="editingPermission.name"
-            type="text"
-            class="p-2 border border-gray-300 rounded mb-4"
-          />
-          <button
-            @click="savePermission"
-            class="bg-emerald-600 text-white px-4 py-2 rounded hover:bg-emerald-700"
-          >
-            Save
-          </button>
-          <button
-            @click="closeEditModal"
-            class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400 ml-2"
-          >
-            Cancel
-          </button>
-        </div>
+  <div class="p-6 bg-white shadow-lg rounded-lg h-screen flex flex-col">
+    <div class="flex justify-between items-center mb-4 px-4 mt-4">
+      <h2 class="text-2xl font-bold">Manage Permissions</h2>
+      <button @click="showAddModal = true"
+        class="bg-emerald-600 text-white px-4 py-3 rounded hover:bg-emerald-700 flex items-center">
+        <i class="fas fa-plus mr-2"></i>
+        Add Permission
+      </button>
+    </div>
+    <div class="flex-grow overflow-x-auto">
+      <div class="w-full">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-100">
+            <tr>
+              <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                ID
+              </th>
+              <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                Permission Name
+              </th>
+              <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <tr v-for="permission in permissions" :key="permission.id">
+              <td class="px-6 py-4 text-sm text-gray-900">
+                {{ permission.id }}
+              </td>
+              <td class="px-6 py-4 text-sm text-gray-900">
+                {{ permission.name }}
+              </td>
+              <td class="px-6 py-4 text-sm text-gray-500">
+                <button @click="editPermission(permission)" class="text-indigo-600 hover:text-indigo-900 mr-2">
+                  Edit |
+                </button>
+                <button @click="deletePermission(permission.id)" class="text-red-500 hover:text-red-900">
+                  Delete
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
-  </template>
-  
-  <script>
-  export default {
-    data() {
-      return {
-        newPermissionName: '',
-        permissions: [
-          { id: 1, name: 'Create' },
-          { id: 2, name: 'Edit' },
-          { id: 3, name: 'Delete' },
-          { id: 4, name: 'View' },
-          // Add more permissions here
-        ],
-        editingPermission: null,
-      };
+    <!-- Add/Edit Department Modal -->
+    <div v-if="showAddModal || showEditModal"
+      class="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
+      <div class="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
+        <h3 class="text-lg font-bold p-3">{{ permissionId ? 'Edit Permission' : 'Add Permission' }}</h3>
+        <!-- Form Start -->
+        <form @submit.prevent="savePermission" class="p-3">
+          <div class="mb-4">
+            <input v-model="permissionName" id="permissionName" type="text"
+              class="border p-2 w-full mt-1 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500"
+              placeholder="Permission Name" required />
+          </div>
+          <div class="flex justify-end">
+            <button type="submit" class="bg-emerald-600 text-white px-4 py-2 rounded hover:bg-emerald-700 mr-2">
+              Save
+            </button>
+            <button type="button" @click="closeModal" style="background-color: red;"
+              class="bg-gray-300 text-white px-4 py-2 rounded hover:bg-gray-400">
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+</template>
+
+<script>
+import axios from 'axios';
+export default {
+  data() {
+    return {
+      permissions: [],
+      permissionName: '',
+      permissionId: null,
+      showAddModal: false,
+      showEditModal: false,
+    };
+  },
+  mounted() {
+    this.fetchPermissions();
+  },
+  methods: {
+    async fetchPermissions() {
+      try {
+        const response = await axios.get('http://127.0.0.1:8000/api/permissions/list');
+        this.permissions = response.data.data;
+      } catch (error) {
+        console.error('Error fetching permissions:', error);
+      }
     },
-    methods: {
-      addPermission() {
-        if (!this.newPermissionName) return;
-        const newPermission = {
-          id: Date.now(), // Simple unique ID generation for demo purposes
-          name: this.newPermissionName,
-        };
-        this.permissions.push(newPermission);
-        this.newPermissionName = '';
-      },
-      editPermission(permissionId) {
-        this.editingPermission = { ...this.permissions.find(permission => permission.id === permissionId) };
-      },
-      savePermission() {
-        const index = this.permissions.findIndex(permission => permission.id === this.editingPermission.id);
-        if (index !== -1) {
-          this.$set(this.permissions, index, this.editingPermission);
+    async addPermission() {
+      try {
+        await axios.post('http://127.0.0.1:8000/api/permission/create', {
+          name: this.permissionName,
+        });
+        this.fetchPermissions();
+        this.closeModal();
+      } catch (error) {
+        console.error('Error creating permission:', error);
+      }
+    },
+    editPermission(permission) {
+      this.permissionId = permission.id;
+      this.permissionName = permission.name;
+      this.showEditModal = true;
+    },
+    async savePermission() {
+      try {
+        if (this.permissionId) {
+          await axios.put(`http://127.0.0.1:8000/api/permission/update/${this.permissionId}`, {
+            name: this.permissionName,
+          });
         }
-        this.editingPermission = null;
-      },
-      deletePermission(permissionId) {
-        this.permissions = this.permissions.filter(permission => permission.id !== permissionId);
-      },
-      closeEditModal() {
-        this.editingPermission = null;
-      },
+        else {
+          this.addPermission();
+        }
+        this.fetchPermissions();
+        this.closeModal();
+
+      } catch (error) {
+        console.error('Error updating permission:', error);
+        this.closeModal();
+      }
     },
-  };
-  </script>
-  
-  <style scoped>
-  /* You can add custom styles here */
-  </style>
-  
+    async deletePermission(id) {
+      try {
+        await axios.delete(`http://127.0.0.1:8000/api/permission/delete/${id}`);
+        this.fetchPermissions();
+      } catch (error) {
+        console.error('Error deleting permission:', error);
+      }
+    },
+    closeModal() {
+      this.permissionName = '';
+      this.permissionId = null;
+      this.showAddModal = false;
+      this.showEditModal = false;
+    }
+  },
+};
+</script>
+
+<style scoped>
+/* Ensure the table takes up full width */
+table {
+  width: 100%;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 0.75rem;
+}
+
+th {
+  background-color: #f3f4f6;
+}
+</style>

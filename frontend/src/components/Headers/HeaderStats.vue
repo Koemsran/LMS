@@ -70,7 +70,7 @@ export default {
       stats: {
         managers: {
           subtitle: "MANAGERS",
-          title: "350,897", // Placeholder, will be updated dynamically
+          title: "0", // Placeholder, will be updated dynamically
           arrow: "up",
           percent: "3.48",
           percentColor: "text-emerald-500",
@@ -165,7 +165,7 @@ export default {
       try {
         const response = await axios.get('http://127.0.0.1:8000/api/departements/list');
         this.departments = response.data.data;
-        this.stats.department.title = this.departments.length;
+        this.stats.department.title = this.departments.length + '+';
       } catch (error) {
         console.error('Error fetching departments:', error);
       }
@@ -174,8 +174,8 @@ export default {
       try {
         const response = await axios.get('http://127.0.0.1:8000/api/users/list');
         this.users = response.data.data;
-        this.stats.employees.title = this.users.length;
-        this.stats.managers.title = this.users.length; // Assuming managers count is same as users count
+        this.stats.employees.title = this.users.length + '+';
+        this.stats.managers.title = this.users.length + '+'; // Assuming managers count is same as users count
       } catch (error) {
         console.error('Error fetching users:', error);
       }
@@ -184,7 +184,7 @@ export default {
       try {
         const response = await axios.get('http://127.0.0.1:8000/api/type-leave/list');
         this.leaveTypes = response.data.data;
-        this.stats.leaveType.title = this.leaveTypes.length;
+        this.stats.leaveType.title = this.leaveTypes.length + '+';
       } catch (error) {
         console.error('Error fetching type of leave:', error);
       }
@@ -195,11 +195,11 @@ export default {
         this.leaves = response.data.data;
 
         // Update requested leave count
-        this.stats.requested.title = this.leaves.length;
+        this.stats.requested.title = this.leaves.length + '+';
 
         // Count and update approved and rejected leave counts
-        const approvedCount = this.leaves.filter(leave => leave.status === 'approved').length;
-        const rejectedCount = this.leaves.filter(leave => leave.status === 'rejected').length;
+        const approvedCount = this.leaves.filter(leave => leave.status === 'approved').length + '+';
+        const rejectedCount = this.leaves.filter(leave => leave.status === 'rejected').length + '+';
 
         this.stats.approved.title = approvedCount;
         this.stats.rejected.title = rejectedCount;

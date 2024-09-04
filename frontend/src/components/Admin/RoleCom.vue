@@ -1,176 +1,191 @@
 <template>
-    <div class="p-6 bg-white shadow-lg rounded-lg">
-      <h2 class="text-2xl font-bold mb-4">Role Management</h2>
-      
-      <!-- Add Role Form -->
-      <div class="mb-4">
-        <input
-          v-model="newRoleName"
-          type="text"
-          placeholder="Enter new role name"
-          class="p-2 border border-gray-300 rounded"
-        />
-        <button
-          @click="addRole"
-          class="bg-emerald-600 text-white px-4 py-2 rounded hover:bg-emerald-700 ml-2"
-        >
-          Add Role
-        </button>
-      </div>
-      
-      <!-- Roles Table -->
-      <table class="min-w-full divide-y divide-gray-200">
-        <thead class="bg-gray-100">
-          <tr>
-            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
-              Role Name
-            </th>
-            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
-              Permissions
-            </th>
-            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
-              Actions
-            </th>
-          </tr>
-        </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
-          <tr v-for="role in roles" :key="role.id">
-            <td class="px-6 py-4 text-sm text-gray-900">{{ role.name }}</td>
-            <td class="px-6 py-4 text-sm text-gray-500">
-              <ul>
-                <li v-for="permission in role.permissions" :key="permission">{{ permission }}</li>
-              </ul>
-            </td>
-            <td class="px-6 py-4 text-sm text-gray-500">
-              <button
-                @click="editRole(role.id)"
-                class="text-indigo-600 hover:text-indigo-900 mr-2"
-              >
-                Edit
-              </button>
-              <button
-                @click="deleteRole(role.id)"
-                class="text-red-600 hover:text-red-900"
-              >
-                Delete
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      
-      <!-- Edit Role Modal -->
-      <div v-if="editingRole" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center">
-        <div class="bg-white p-6 rounded-lg shadow-lg">
-          <h3 class="text-xl font-bold mb-4">Edit Role</h3>
-          <input
-            v-model="editingRole.name"
-            type="text"
-            class="p-2 border border-gray-300 rounded mb-4"
-          />
-          <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700">Permissions:</label>
-            <div class="mt-2">
-              <label class="inline-flex items-center">
-                <input
-                  type="checkbox"
-                  v-model="editingRole.permissions"
-                  value="create"
-                  class="form-checkbox"
-                />
-                <span class="ml-2">Create</span>
-              </label>
-              <label class="inline-flex items-center ml-4">
-                <input
-                  type="checkbox"
-                  v-model="editingRole.permissions"
-                  value="edit"
-                  class="form-checkbox"
-                />
-                <span class="ml-2">Edit</span>
-              </label>
-              <label class="inline-flex items-center ml-4">
-                <input
-                  type="checkbox"
-                  v-model="editingRole.permissions"
-                  value="delete"
-                  class="form-checkbox"
-                />
-                <span class="ml-2">Delete</span>
-              </label>
-              <label class="inline-flex items-center ml-4">
-                <input
-                  type="checkbox"
-                  v-model="editingRole.permissions"
-                  value="view"
-                  class="form-checkbox"
-                />
-                <span class="ml-2">View</span>
-              </label>
-            </div>
-          </div>
-          <button
-            @click="saveRole"
-            class="bg-emerald-600 text-white px-4 py-2 rounded hover:bg-emerald-700"
-          >
-            Save
-          </button>
-          <button
-            @click="closeEditModal"
-            class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400 ml-2"
-          >
-            Cancel
-          </button>
-        </div>
+  <div class="p-6 bg-white shadow-lg rounded-lg h-screen flex flex-col">
+    <div class="flex justify-between items-center mb-4 px-4 mt-4">
+      <h2 class="text-2xl font-bold">Manage Roles</h2>
+      <button @click="showAddModal = true"
+        class="bg-emerald-600 text-white px-4 py-3 rounded hover:bg-emerald-700 flex items-center">
+        <i class="fas fa-plus mr-2"></i>
+        Add Role
+      </button>
+    </div>
+    <div class="flex-grow overflow-x-auto">
+      <div class="w-full">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-100">
+            <tr>
+              <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                ID
+              </th>
+              <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                Role
+              </th>
+              <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                Permissions
+              </th>
+              <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <tr v-for="role in roles" :key="role.id">
+              <td class="px-6 py-4 text-gray-900">
+                {{ role.id }}
+              </td>
+              <td class="px-6 py-4 text-gray-900">
+                {{ role.name }}
+              </td>
+
+              <td class="py-4 px-6 border-b border-grey-light">
+
+                <span v-for="permission in role.permissions" :key="permission.id"
+                  class="inline-flex items-center justify-center px-2 py-1 mr-2 text-xs font-bold leading-none text-white bg-orange-500 rounded-full">{{
+                  permission.name }}</span>
+
+              </td>
+              <td class="px-6 py-4 text-sm text-gray-500">
+                <button @click="addPermission(role.id, role.permissions)"
+                  class="text-indigo-600 hover:text-indigo-900 mr-2">
+                  Edit Permission
+                </button>
+                <button @click="editRole(role)" class="text-indigo-500 hover:text-indigo-900 mr-2">
+                  Edit |
+                </button>
+                <button @click="deleteRole(role.id)" class="text-red-500 hover:text-red-900">
+                  Delete
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
-  </template>
-  
-  <script>
-  export default {
-    data() {
-      return {
-        newRoleName: '',
-        roles: [
-          { id: 1, name: 'Admin', permissions: ['create', 'edit', 'delete', 'view'] },
-          { id: 2, name: 'Editor', permissions: ['edit', 'view'] },
-          // Add more roles here
-        ],
-        editingRole: null,
-      };
+    <!-- Add/Edit Department Modal -->
+    <div v-if="showAddModal || showEditModal"
+      class="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
+      <div class="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
+        <h3 class="text-lg font-bold p-3">{{ roleId ? 'Edit Role' : 'Add Role' }}</h3>
+        <!-- Form Start -->
+        <form @submit.prevent="saveRole" class="p-3">
+          <div class="mb-4">
+            <input v-model="roleName" id="roleName" type="text"
+              class="border p-2 w-full mt-1 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500"
+              placeholder="Role Name" required />
+          </div>
+          <div class="flex justify-end">
+            <button type="submit" class="bg-emerald-600 text-white px-4 py-2 rounded hover:bg-emerald-700 mr-2">
+              Save
+            </button>
+            <button type="button" @click="closeModal" style="background-color: red;"
+              class="bg-gray-300 text-white px-4 py-2 rounded hover:bg-gray-400">
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+</template>
+
+<script>
+import axios from 'axios';
+export default {
+  data() {
+    return {
+      roles: [],
+      roleName: '',
+      roleId: null,
+      showAddModal: false,
+      showEditModal: false,
+    };
+  },
+  mounted() {
+    this.fetchRoles();
+  },
+  methods: {
+    async fetchRoles() {
+      try {
+        const response = await axios.get('http://127.0.0.1:8000/api/roles/list');
+        this.roles = response.data.data;
+      } catch (error) {
+        console.error('Error fetching roles:', error);
+      }
     },
-    methods: {
-      addRole() {
-        if (!this.newRoleName) return;
-        const newRole = {
-          id: Date.now(), // Simple unique ID generation for demo purposes
-          name: this.newRoleName,
-          permissions: [], // You may want to initialize with some default permissions
-        };
-        this.roles.push(newRole);
-        this.newRoleName = '';
-      },
-      editRole(roleId) {
-        this.editingRole = { ...this.roles.find(role => role.id === roleId) };
-      },
-      saveRole() {
-        const index = this.roles.findIndex(role => role.id === this.editingRole.id);
-        if (index !== -1) {
-          this.$set(this.roles, index, this.editingRole);
+    async addRole() {
+      try {
+        await axios.post('http://127.0.0.1:8000/api/role/create', {
+          name: this.roleName,
+        });
+        this.fetchRoles();
+        this.closeModal();
+      } catch (error) {
+        console.error('Error creating role:', error);
+      }
+    },
+    addPermission(roleId, permissions) {
+      this.$router.push({
+        name: 'AddPermission',
+        query: {
+          roleId,
+          permissions: JSON.stringify(permissions)
         }
-        this.editingRole = null;
-      },
-      deleteRole(roleId) {
-        this.roles = this.roles.filter(role => role.id !== roleId);
-      },
-      closeEditModal() {
-        this.editingRole = null;
-      },
+      });
     },
-  };
-  </script>
-  
-  <style scoped>
-  /* You can add custom styles here */
-  </style>
-  
+    editRole(role) {
+      this.roleId = role.id;
+      this.roleName = role.name;
+      this.showEditModal = true;
+    },
+    async saveRole() {
+      try {
+        if (this.roleId) {
+          await axios.put(`http://127.0.0.1:8000/api/role/update/${this.roleId}`, {
+            name: this.roleName,
+          });
+        }
+        else {
+          this.addRole();
+        }
+        this.fetchRoles();
+        this.closeModal();
+
+      } catch (error) {
+        console.error('Error updating role:', error);
+        this.closeModal();
+      }
+    },
+    async deleteRole(id) {
+      try {
+        await axios.delete(`http://127.0.0.1:8000/api/role/delete/${id}`);
+        this.fetchRoles();
+      } catch (error) {
+        console.error('Error deleting role:', error);
+      }
+    },
+    closeModal() {
+      this.roleName = '';
+      this.roleId = null;
+      this.showAddModal = false;
+      this.showEditModal = false;
+    }
+  },
+};
+</script>
+
+<style scoped>
+/* Ensure the table takes up full width */
+table {
+  width: 100%;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 0.75rem;
+}
+
+th {
+  background-color: #f3f4f6;
+}
+</style>

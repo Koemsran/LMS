@@ -29,6 +29,7 @@ import Calendars from "@/views/admin/Calendars.vue";
 import Roles from "@/views/admin/Roles.vue";
 import Users from "@/views/admin/Users.vue";
 import Permissions from "@/views/admin/Permissions.vue";
+import AddPermission from "@/views/admin/AddPermission.vue";
 import Subordinates from "@/views/admin/Subordinates.vue";
 import Histories from "@/views/admin/Histories.vue";
 
@@ -127,6 +128,12 @@ const routes = [
   {
     path: "/admin/permissions",
     component: Permissions,
+  },
+  {
+    path: '/admin/add-permission',
+    name: 'AddPermission',
+    component: AddPermission,
+    props: true
   },
   {
     path: "/landing",

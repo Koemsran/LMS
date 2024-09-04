@@ -206,6 +206,7 @@ export default {
             try {
                 await axios.post(`http://127.0.0.1:8000/api/leave/approve/${id}`);
                 this.dropdownPopoverShow = false;
+                this.fetchLeaveRequest()
             } catch (error) {
                 console.error('Error updating leave status to approve: ', error);
             }
@@ -214,6 +215,7 @@ export default {
             try {
                 await axios.post(`http://127.0.0.1:8000/api/leave/reject/${id}`);
                 this.dropdownPopoverShow = false;
+                this.fetchLeaveRequest()
             } catch (error) {
                 console.error('Error updating leave status to reject:', error);
             }
@@ -222,6 +224,7 @@ export default {
             try {
                 await axios.delete(`http://127.0.0.1:8000/api/leave/delete/${id}`);
                 this.dropdownPopoverShow = false;
+                this.fetchLeaveRequest()
             } catch (error) {
                 console.error('Error updating leave status to cancel:', error);
             }

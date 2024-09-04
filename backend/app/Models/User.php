@@ -47,30 +47,44 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function role(){
+    public function role()
+    {
         return $this->belongsTo(Role::class, 'role_id');
     }
 
-    public function departement(){
+    public function departement()
+    {
         return $this->belongsTo(Departement::class, 'departement_id');
     }
 
-    public static function store($request, $id = null){
+    public static function store($request, $id = null)
+    {
+        // Extract user data from the request
         $data = $request->only('name', 'email', 'password', 'leave_balance');
-        
+
         // Hash the password if it is present in the request
         if (isset($data['password'])) {
             $data['password'] = Hash::make($data['password']);
         }
 
+        // Handle profile image upload if present
         if ($request->hasFile('profile')) {
             $imageName = time() . '.' . $request->file('profile')->extension();
-            $request->file('profile')->storeAs('public/images', $imageName); 
-            $data['profile'] = 'images/' . $imageName; 
+            $request->file('profile')->storeAs('public/images', $imageName);
+            $data['profile'] = 'images/' . $imageName;
         }
 
         // Use updateOrCreate to either update existing record or create a new one
-        $data = self::updateOrCreate(['id' => $id], $data);
-        return $data;
+        $user = self::updateOrCreate(['id' => $id], $data);
+
+        // Assign roles to the user if 'roles' are present in the request
+        if ($request->has('roles')) {
+            $roleIds = $request->input('roles');
+
+            // Detach existing roles and assign new roles
+            $user->roles()->sync($roleIds);
+        }
+
+        return $user;
     }
 }

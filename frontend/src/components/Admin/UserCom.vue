@@ -110,7 +110,7 @@
               {{ user.leave_balance }}
             </td>
             <td class="border-t-0 px-6 text-sm align-middle border-l-0 border-r-0 whitespace-nowrap p-4">
-              {{ user.role }}
+              <span v-for="role in user.roles" :key="role.id">{{role.name }}</span>
             </td>
             <td class="border-t-0 px-6 text-sm align-middle border-l-0 border-r-0 whitespace-nowrap p-4">
               {{ user.departement }}
@@ -145,6 +145,7 @@ export default {
       try {
         const response = await axios.get('http://127.0.0.1:8000/api/users/list');
         this.users = response.data.data;
+        console.log(this.users)
       } catch (error) {
         console.error('Error fetching users:', error);
       }
