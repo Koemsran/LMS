@@ -52,7 +52,7 @@ Route::delete('/permission/delete/{id}', [PermissionController::class, 'destroy'
 Route::get('/users/list', [UserController::class, 'index']);
 Route::post('/user/create', [UserController::class, 'store']);
 Route::get('/user/show/{id}', [UserController::class, 'show']);
-Route::put('/user/update/{id}', [UserController::class, 'update']);
+Route::post('/user/update/{id}', [UserController::class, 'update']);
 Route::delete('/user/delete/{id}', [UserController::class, 'destroy']);
 
 // ===================== Type of Leave  =========================

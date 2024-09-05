@@ -91,10 +91,10 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="user in users" :key="user.id">
+          <tr v-for="(user, index) in users" :key="user.id">
 
             <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 whitespace-nowrap p-4">
-              {{ user.id }}
+              {{ index+1 }}
             </td>
             <td v-if="user.profile" class="border-t-0 px-6 align-middle border-l-0 border-r-0 whitespace-nowrap p-4">
               <img :src="`http://127.0.0.1:8000/storage/${user.profile}`" class="h-12 w-12 bg-white rounded-full border"
@@ -145,6 +145,7 @@ export default {
       ],
     };
   },
+  
   mounted() {
     this.fetchUsers();
   },

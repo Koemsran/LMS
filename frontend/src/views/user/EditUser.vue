@@ -9,7 +9,7 @@
                     <h2 class="text-2xl font-bold mb-6">Edit User</h2>
 
                     <form @submit.prevent="submitForm">
-                        
+
                         <!-- Name Field -->
                         <div class="mb-4">
                             <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
@@ -121,20 +121,30 @@ export default {
             let formData = new FormData();
             formData.append('name', this.form.name);
             formData.append('email', this.form.email);
-            formData.append('password', this.form.password);
 
+            // Append roles as individual entries
             this.form.roles.forEach(role => {
                 formData.append('roles[]', role);
             });
 
-            formData.append('leave_balance', this.form.leave_balance);
+            // Append leave balance only if it's provided
+            if (this.form.leave_balance !== null && this.form.leave_balance !== '') {
+                formData.append('leave_balance', this.form.leave_balance);
+            }
+
+            // Append department
             formData.append('department_id', this.form.department);
+
+            // Append the profile only if a file is selected
             if (this.form.profile) {
                 formData.append('profile', this.form.profile);
             }
-
+            // for (let pair of formData.entries()) {
+            //     console.log(pair[0] + ': ' + pair[1]); // Logs each key-value pair in the FormData
+            // }
             try {
-                await axios.update(`http://127.0.0.1:8000/api/user/update/${this.userId}`, formData, {
+                // Use the correct axios method, `put` or `patch` instead of `update`
+                await axios.post(`http://127.0.0.1:8000/api/user/update/${this.userId}`, formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     },
