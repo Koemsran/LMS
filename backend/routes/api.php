@@ -47,6 +47,7 @@ Route::get('/permissions/list', [PermissionController::class, 'index']);
 Route::post('/permission/create', [PermissionController::class, 'store']);
 Route::put('/permission/update/{id}', [PermissionController::class, 'update']);
 Route::delete('/permission/delete/{id}', [PermissionController::class, 'destroy']);
+
 // ========================= Users =============================
 Route::get('/users/list', [UserController::class, 'index']);
 Route::post('/user/create', [UserController::class, 'store']);

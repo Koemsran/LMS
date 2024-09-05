@@ -15,20 +15,24 @@ class UserResource extends JsonResource
     public function toArray(Request $request): array
 {
     return [
-        "id" => $this->id,
-        "name" => $this->name,
-        "email" => $this->email,
-        "profile" => $this->profile,
-        "leave_balance" => $this->leave_balance,
-        'created_at' => $this->created_at->format('d-m-Y'),
-        'updated_at' => $this->updated_at->format('d-m-Y'),
-        'roles' => $this->roles->map(function ($role) {
-            return [
-                'id' => $role->id,
-                'name' => $role->name,
-            ];
-        }),
-    ];
+    "id" => $this->id,
+    "name" => $this->name,
+    "email" => $this->email,
+    "profile" => $this->profile,
+    "leave_balance" => $this->leave_balance,
+    'created_at' => $this->created_at->format('d-m-Y'),
+    'updated_at' => $this->updated_at->format('d-m-Y'),
+    'roles' => $this->roles->map(function ($role) {
+        return [
+            'id' => $role->id,
+            'name' => $role->name,
+        ];
+    }),
+    'department' => $this->department ? [
+        'id' => $this->department->id,
+        'name' => $this->department->name,
+    ] : 'No Department', // Return null if no department
+];
 }
 
 }

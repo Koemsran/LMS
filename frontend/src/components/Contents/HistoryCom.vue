@@ -35,75 +35,33 @@
             <thead>
               <tr>
                 <th
-                  class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
-                  :class="[
-                    color === 'light'
-                      ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
-                      : 'bg-emerald-800 text-emerald-300 border-emerald-700',
-                  ]">
+                  class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
                   Leave Type
                 </th>
                 <th
-                  class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
-                  :class="[
-                    color === 'light'
-                      ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
-                      : 'bg-emerald-800 text-emerald-300 border-emerald-700',
-                  ]">
+                  class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
                   Date From
                 </th>
                 <th
-                  class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
-                  :class="[
-                    color === 'light'
-                      ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
-                      : 'bg-emerald-800 text-emerald-300 border-emerald-700',
-                  ]">
+                  class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
                   Date To
                 </th>
                 <th
-                  class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
-                  :class="[
-                    color === 'light'
-                      ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
-                      : 'bg-emerald-800 text-emerald-300 border-emerald-700',
-                  ]">
+                  class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
                   Status
                 </th>
                 <th
-                  class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
-                  :class="[
-                    color === 'light'
-                      ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
-                      : 'bg-emerald-800 text-emerald-300 border-emerald-700',
-                  ]">
+                  class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
                   Reason
                 </th>
                 <th
-                  class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
-                  :class="[
-                    color === 'light'
-                      ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
-                      : 'bg-emerald-800 text-emerald-300 border-emerald-700',
-                  ]">
+                  class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
                   Requested
                 </th>
                 <th
-                  class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
-                  :class="[
-                    color === 'light'
-                      ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
-                      : 'bg-emerald-800 text-emerald-300 border-emerald-700',
-                  ]">
+                  class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
                   Action
                 </th>
-                <th
-                  class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
-                  :class="[
-                    color === 'light'
-                      ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
-                      : 'bg-emerald-800 text-emerald-300 border-emerald-700',
-                  ]"></th>
               </tr>
             </thead>
             <tbody>
@@ -132,8 +90,7 @@
                 <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 whitespace-nowrap p-4">
                   {{ leave.created_at }}
                 </td>
-                <td class="border-t-0 px-6 align-middle border-l-0 border-r-0  whitespace-nowrap p-4">
-
+                <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 whitespace-nowrap p-4">
                   <a href="#" class="text-blue-500 hover:text-blue-700 mr-4" title="View">
                     <i class="fas fa-eye text-lg" style="color: #006ca5"></i>
                   </a>
@@ -150,9 +107,9 @@
   </div>
 </template>
 
-
 <script>
 import axios from 'axios';
+
 export default {
   data() {
     return {
@@ -165,10 +122,13 @@ export default {
   },
   computed: {
     filteredHistories() {
+      const filteredLeaves = this.leavesHistories.filter(leave => leave.status !== 'pending');
       if (this.filter === 'all') {
-        return this.leavesHistories.filter(leave => leave.status !== 'pending');
+        return filteredLeaves;
       }
-      return this.leavesHistories.filter(leave => leave.status === this.filter);
+
+      // Return filtered leaves based on selected status
+      return filteredLeaves.filter(leave => leave.status === this.filter);
     }
   },
   methods: {
@@ -183,7 +143,7 @@ export default {
     async deleteHistory(id) {
       try {
         await axios.delete(`http://127.0.0.1:8000/api/history/delete/${id}`);
-        this.fetchHistories();
+        this.fetchHistories(); // Refresh the data after deletion
       } catch (error) {
         console.error('Error deleting history:', error);
       }

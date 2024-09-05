@@ -27,11 +27,15 @@ import Departments from "@/views/admin/Departments.vue";
 import Reports from "@/views/admin/Reports.vue";
 import Calendars from "@/views/admin/Calendars.vue";
 import Roles from "@/views/admin/Roles.vue";
-import Users from "@/views/admin/Users.vue";
 import Permissions from "@/views/admin/Permissions.vue";
 import AddPermission from "@/views/admin/AddPermission.vue";
 import Subordinates from "@/views/admin/Subordinates.vue";
 import Histories from "@/views/admin/Histories.vue";
+
+//view for user layout 
+import Users from "@/views/user/Users.vue";
+import CreateUser from "@/views/user/CreateUser.vue";
+import EditUser from "@/views/user/EditUser.vue";
 
 // views for Auth layout
 
@@ -124,6 +128,18 @@ const routes = [
   {
     path: "/admin/users",
     component: Users,
+  },
+  {
+    path: "/admin/create-user",
+    component: CreateUser,
+    name: 'AddUser',
+    props: true
+  },
+  {
+    path: "/admin/edit-user",
+    component: EditUser,
+    name: 'EditUser',
+    props: true
   },
   {
     path: "/admin/permissions",

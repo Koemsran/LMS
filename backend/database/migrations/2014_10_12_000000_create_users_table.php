@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('profile')->nullable();
             $table->decimal('leave_balance')->nullable();
+            $table->string('department_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

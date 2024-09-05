@@ -91,7 +91,8 @@
                     <tr v-for="leave in filteredLeaves" :key="leave.id">
                         <th
                             class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center">
-                            <img :src="`http://127.0.0.1:8000/storage/${leave.profile}`" class="h-12 w-12 bg-white rounded-full border" alt="..." />
+                            <img v-if="leave.profile" :src="`http://127.0.0.1:8000/storage/${leave.profile}`" class="h-12 w-12 bg-white rounded-full border" alt="..." />
+                            <img v-else src="../../assets/img/def-logo.png" class="h-12 w-12 bg-white rounded-full border" alt="..." />
                             <span class="ml-3 font-bold"
                                 :class="[color === 'light' ? 'text-blueGray-600' : 'text-white']">
                                 {{ leave.user_name }}

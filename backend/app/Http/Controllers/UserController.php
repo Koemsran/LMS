@@ -45,6 +45,7 @@ class UserController extends Controller
     {
         $user = User::find($id);
         if($user){
+            $user = new UserResource($user);
             return response()->json(['sucess'=> true, "data"=>$user ],200);
         }else{
             return response()->json(['error'=> 'User not found'],404);
@@ -73,6 +74,8 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $user = User::find($id);
+        $user -> delete();
+        return response()->json(['success'=> true, "message"=>"User deleted successfully"],200);
     }
 }

@@ -25,7 +25,8 @@ class User extends Authenticatable
         'email',
         'password',
         'profile',
-        'leave_balance'
+        'leave_balance',
+        'department_id'
     ];
 
     /**
@@ -52,15 +53,15 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class, 'role_id');
     }
 
-    public function departement()
+    public function department()
     {
-        return $this->belongsTo(Departement::class, 'departement_id');
+        return $this->belongsTo(Departement::class, 'department_id');
     }
 
     public static function store($request, $id = null)
     {
         // Extract user data from the request
-        $data = $request->only('name', 'email', 'password', 'leave_balance');
+        $data = $request->only('name', 'email', 'password', 'leave_balance', 'department_id');
 
         // Hash the password if it is present in the request
         if (isset($data['password'])) {
