@@ -23,6 +23,7 @@ import Approvals from "@/views/admin/Approvals.vue";
 import Leaves from "@/views/admin/Leaves.vue";
 import LeaveTypes from "@/views/admin/LeaveTypes.vue";
 import LeaveBalances from "@/views/admin/LeaveBalances.vue";
+import LeaveBalanceDetail from "@/views/admin/LeaveBalanceDertail.vue";
 import Departments from "@/views/admin/Departments.vue";
 import Reports from "@/views/admin/Reports.vue";
 import Calendars from "@/views/admin/Calendars.vue";
@@ -38,7 +39,6 @@ import CreateUser from "@/views/user/CreateUser.vue";
 import EditUser from "@/views/user/EditUser.vue";
 
 // views for Auth layout
-
 import Login from "@/views/auth/Login.vue";
 import Register from "@/views/auth/Register.vue";
 
@@ -100,6 +100,12 @@ const routes = [
   {
     path: "/admin/leave-balance",
     component: LeaveBalances,
+  },
+  {
+    path: "/admin/leave-balance-detail",
+    name:"LeaveBalanceDetail",
+    component: LeaveBalanceDetail,
+    props: true
   },
   {
     path: "/admin/reports",

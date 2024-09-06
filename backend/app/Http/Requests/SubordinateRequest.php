@@ -16,7 +16,8 @@ class SubordinateRequest extends DefaultRequest
     public function rules(): array
     {
         return [
-            'user_id' =>'required|exists:users,id',
+            'manager_id' =>'required|exists:users,id',
+            'subordinator_id' =>'required|exists:users,id',
         ];
     }
 }

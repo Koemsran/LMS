@@ -30,7 +30,7 @@
                                     ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
                                     : 'bg-emerald-800 text-emerald-300 border-emerald-700',
                             ]">
-                            Profile
+                            Manager Name
                         </th>
                         <th class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
                             :class="[
@@ -38,7 +38,7 @@
                                     ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
                                     : 'bg-emerald-800 text-emerald-300 border-emerald-700',
                             ]">
-                            Full Name
+                            Manager Email
                         </th>
                         <th class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
                             :class="[
@@ -46,7 +46,15 @@
                                     ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
                                     : 'bg-emerald-800 text-emerald-300 border-emerald-700',
                             ]">
-                            Email
+                            Subordinate Name
+                        </th>
+                        <th class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
+                            :class="[
+                                color === 'light'
+                                    ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
+                                    : 'bg-emerald-800 text-emerald-300 border-emerald-700',
+                            ]">
+                           Subordinate Email
                         </th>
                         <th class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
                             :class="[
@@ -55,6 +63,14 @@
                                     : 'bg-emerald-800 text-emerald-300 border-emerald-700',
                             ]">
                             Leave Balance
+                        </th>
+                        <th class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
+                            :class="[
+                                color === 'light'
+                                    ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
+                                    : 'bg-emerald-800 text-emerald-300 border-emerald-700',
+                            ]">
+                            Assigned Date
                         </th>
 
                         <th class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
@@ -69,24 +85,31 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="leave in leaves" :key="leave.id">
+                    <tr v-for="subordinate in subordinates" :key="subordinate.id">
 
-                        <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 whitespace-nowrap p-4">
-                            {{ leave.id }}
+                        <td class="border-t-0 px-6 align-middle text-xs border-l-0 border-r-0 whitespace-nowrap p-4">
+                            {{ subordinate.id }}
+                        </td>
+                        <td class="border-t-0 px-6 align-middle text-xs border-l-0 border-r-0 whitespace-nowrap p-4">
+                            {{ subordinate.namager }}
+                        </td>
+                        <td class="border-t-0 px-6 align-middle text-xs border-l-0 border-r-0 whitespace-nowrap p-4">
+                            {{ subordinate.namager_email }}
+                        </td>
+                        <td class="border-t-0 px-6 align-middle text-xs border-l-0 border-r-0 whitespace-nowrap p-4">
+                            {{ subordinate.subordinator }}
+                        </td>
+                        <td class="border-t-0 px-6 align-middle text-xs border-l-0 border-r-0 whitespace-nowrap p-4">
+                            {{ subordinate.subordinator_email }}
+                        </td>
+                        <td class="border-t-0 px-6 align-middle text-xs border-l-0 border-r-0 whitespace-nowrap p-4">
+                            {{ subordinate.subordinator_balance }}
+                        </td>
+                        <td class="border-t-0 px-6 align-middle text-xs border-l-0 border-r-0 whitespace-nowrap p-4">
+                            {{ subordinate.created_at }}
                         </td>
                         <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 whitespace-nowrap p-4">
-                            <img :src="leave.image" class="h-12 w-12 bg-white rounded-full border" alt="..." />
-                        </td>
-                        <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 whitespace-nowrap p-4">
-                            {{ leave.name }}
-                        </td>
-                        <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 whitespace-nowrap p-4">
-                            {{ leave.email }}
-                        </td>
-                        <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 whitespace-nowrap p-4">
-                            {{ leave.leave_balance }}
-                        </td>
-                        <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 whitespace-nowrap p-4">
+                            <i style="color: #006ca5" class="fas fa-edit text-lg mr-3"></i>
                             <i style="color: red" class="fas fa-trash text-lg"></i>
                         </td>
                     </tr>
@@ -102,7 +125,14 @@
                     <div class="mb-4">
                         <select name="user" id="user"
                             class="border py-2 px-4 w-full mt-1 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500">
-                            <option value="">Select User</option>
+                            <option value="">Select Manager</option>
+                            <option v-for="user in users" :key="user.id" :value="user.id">
+                                {{ user.name }}
+                            </option>
+                        </select>
+                        <select name="user" id="user"
+                            class="border py-2 px-4 w-full mt-1 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500">
+                            <option value="">Select Subordinate</option>
                             <option v-for="user in users" :key="user.id" :value="user.id">
                                 {{ user.name }}
                             </option>
@@ -128,37 +158,11 @@
 
 <script>
 
-import team1 from "@/assets/img/me.jpg";
-import team2 from "@/assets/img/team-2-800x800.jpg";
-import team3 from "@/assets/img/team-3-800x800.jpg";
 import axios from "axios";
 export default {
     data() {
         return {
-            users: [],
-            leaves: [
-                {
-                    id: 1,
-                    name: "Koemsran Phon",
-                    email: "koemsran@gmail.com",
-                    leave_balance:2,
-                    image: team1,
-                },
-                {
-                    id: 2,
-                    name: "Sreyvoath Voeun",
-                    email: "sreyvoath@gmail.com",
-                    leave_balance:2,
-                    image: team2,
-                },
-                {
-                    id: 3,
-                    name: "Layhor Met",
-                    email: "layhor@gmail.com",
-                    leave_balance:2,
-                    image: team3,
-                },
-            ],
+            subordinates: [],
             showAddTypeModal: false,
         };
     },
@@ -173,8 +177,8 @@ export default {
         },
         async fetchUsers() {
             try {
-                const response = await axios.get('http://127.0.0.1:8000/api/users/list');
-                this.users = response.data.data;
+                const response = await axios.get('http://127.0.0.1:8000/api/subordinates/list');
+                this.subordinates = response.data.data;
             } catch (error) {
                 console.error('Error fetching users:', error);
             }

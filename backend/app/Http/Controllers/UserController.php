@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
+use App\Models\LeaveBalance;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -34,6 +35,14 @@ class UserController extends Controller
     public function store(Request $request)
     {
         User::store($request);
+        $user = User::latest()->first();
+        LeaveBalance::create([
+            'user_id' => $user->id,
+            'total_leave' => $user->leave_balance,
+            'token_balance' => 0,
+            'leave_balance' => $user->leave_balance,
+            'joining_date' => now(),
+        ]);
         return response()->json(['success'=> true, "message"=>"User created successfully"],201);
         
     }

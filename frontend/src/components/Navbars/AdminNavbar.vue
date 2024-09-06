@@ -117,10 +117,12 @@ export default {
       try {
         const response = await axios.get('http://127.0.0.1:8000/api/type-leave/list');
         leaveTypes.value = response.data.data;
+
       } catch (error) {
         console.error('Error fetching leave types:', error);
       }
     };
+
 
     const calculateDuration = () => {
       if (form.value.dateFrom && form.value.dateTo) {
@@ -158,6 +160,17 @@ export default {
     const submitForm = async () => {
       if (validateDates()) { // Validate dates before submission
         try {
+          // First, fetch the user's current leave balance
+          const leaveBalanceResponse = await axios.get(`http://127.0.0.1:8000/api/leave/show/${userId.value}`);
+          const leaveBalanceData = leaveBalanceResponse.data;
+          console.log(leaveBalanceData)
+          // Check if the requested leave duration exceeds the available leave balance
+          if (form.value.duration > leaveBalanceData.leave_balance) {
+            alert('Cannot request leave. Requested leave duration exceeds your available leave balance.');
+            return; // Stop further execution
+          }
+
+          // Proceed with leave request if the duration is valid
           await axios.post('http://127.0.0.1:8000/api/leave/request', {
             user_id: userId.value,
             leave_type_id: form.value.type,
@@ -166,8 +179,19 @@ export default {
             duration: form.value.duration,
             reason: form.value.reason
           });
-          clearForm(); // Clear the form after successful submission
+
+          // Update token_balance after successful leave request submission
+          await axios.put(`http://127.0.0.1:8000/api/balance/update/${userId.value}`, {
+            token_balance: form.value.duration
+          })
+            .then(response => {
+              console.log('Token balance updated:', response.data);
+            });
+
+          // Clear the form after successful submission
+          clearForm();
           showPopup.value = false;
+
         } catch (error) {
           console.error('Error submitting leave request:', error);
         }
@@ -176,8 +200,8 @@ export default {
 
     const clearForm = () => {
       form.value = {
-        duration: '', 
-        type: '', 
+        duration: '',
+        type: '',
         dateFrom: '',
         dateTo: '',
         reason: '',
@@ -193,7 +217,7 @@ export default {
             Authorization: `Bearer ${token}`
           }
         });
-        userId.value = response.data.data.id; 
+        userId.value = response.data.data.id;
         fetchTypes();
       } catch (error) {
         console.error('Error fetching data:', error);

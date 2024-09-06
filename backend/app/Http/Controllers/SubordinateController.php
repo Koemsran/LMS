@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SubordinateRequest;
+use App\Http\Resources\SubordinateResource;
 use App\Models\Subordinate;
 use Illuminate\Http\Request;
 
@@ -14,6 +15,7 @@ class SubordinateController extends Controller
     public function getSubordinates()
     {
         $subordinates = Subordinate::all();
+        $subordinates = SubordinateResource::collection($subordinates);
         return response()->json(['success'=>true, 'data'=>$subordinates], 200);
     }
 
@@ -55,7 +57,8 @@ class SubordinateController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        Subordinate::store($request, $id);
+        return response()->json(['success'=> true, "message"=>"Subordinate updated successfully"], 201);
     }
 
     /**

@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class SubordinateResource extends JsonResource
+class LeaveBalanceResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,11 +16,12 @@ class SubordinateResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'namager' => $this->manager->name,
-            'namager_email' => $this->manager->email,
-            'subordinator' => $this->subordinator->name,
-            'subordinator_email' => $this->subordinator->email,
-            'subordinator_balance' => $this->subordinator->leave_balance,
+            'user_id' => $this->user->id,
+            'user_name' => $this->user->name,
+            'joining_date' => $this->user->created_at->format('d-m-Y'),
+            'total_leave' => $this->user->leave_balance,
+            'token_balance' => $this->token_balance,
+            'leave_balance' => $this->leave_balance,
             'created_at' => $this->created_at->format('d-m-Y'),
             'updated_at' => $this->updated_at->format('d-m-Y'),
         ];

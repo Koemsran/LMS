@@ -14,27 +14,35 @@
           <thead class="bg-gray-100">
             <tr>
               <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">ID</th>
-              <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">User Name</th>
-              <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Joining Date</th>
-              <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Total Leave Days</th>
-              <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Leave Token</th>
-              <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Leave Balance</th>
+              <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">User Name
+              </th>
+              <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Joining Date
+              </th>
+              <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Total Leave
+                Days</th>
+              <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Leave Token
+              </th>
+              <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Leave Balance
+              </th>
               <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
           <tbody class="bg-white divide-y divide-gray-200">
-            <tr v-for="(leaveType, index) in leaveTypes" :key="leaveType.id">
+            <tr v-for="(balance, index) in leaveBalances" :key="balance.id">
               <td class="px-6 py-4 text-sm text-gray-900">{{ index + 1 }}</td>
-              <td class="px-6 py-4 text-sm text-gray-900">{{ leaveType.userName }}</td>
-              <td class="px-6 py-4 text-sm text-gray-900">{{ leaveType.joiningDate }}</td>
-              <td class="px-6 py-4 text-sm text-gray-900">{{ leaveType.totalLeaveDays }}</td>
-              <td class="px-6 py-4 text-sm text-gray-900">{{ leaveType.leaveToken }}</td>
-              <td class="px-6 py-4 text-sm text-gray-900">{{ leaveType.leaveBalance }}</td>
+              <td class="px-6 py-4 text-sm text-gray-900">{{ balance.user_name }}</td>
+              <td class="px-6 py-4 text-sm text-gray-900">{{ balance.joining_date }}</td>
+              <td class="px-6 py-4 text-sm text-gray-900">{{ balance.total_leave }}</td>
+              <td class="px-6 py-4 text-sm text-gray-900">{{ balance.token_balance }}</td>
+              <td class="px-6 py-4 text-sm text-gray-900">{{ balance.leave_balance }}</td>
               <td class="px-6 py-4 text-sm text-gray-500">
-                <button @click="editLeaveType(leaveType)" class="text-indigo-600 hover:text-indigo-900 mr-2">
+                <router-link :to="{ path: '/admin/leave-balance-detail', query: { id: balance.id } }" class="text-indigo-600 hover:text-indigo-900 mr-2">
+                  Detail |
+                </router-link>
+                <button @click="editBalance(balance)" class="text-teal-600 hover:text-indigo-900 mr-2">
                   Edit |
                 </button>
-                <button @click="deleteLeaveType(leaveType.id)" class="text-red-500 hover:text-red-900">
+                <button @click="deleteBalance(balance.id)" class="text-red-500 hover:text-red-900">
                   Delete
                 </button>
               </td>
@@ -47,33 +55,13 @@
     <div v-if="showAddTypeModal || showEditTypeModal"
       class="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
       <div class="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
-        <h3 class="text-lg font-bold p-3">{{ typeId ? 'Edit Leave' : 'Add Leave' }}</h3>
+        <h3 class="text-lg font-bold p-3">{{ userId ? 'Edit Leave Balance' : 'Add Leave Balance' }}</h3>
         <!-- Form Start -->
-        <form @submit.prevent="saveType" class="p-3">
+        <form @submit.prevent="saveLeaveBalance" class="p-3">
           <div class="mb-4">
-            <input v-model="typeData.userName" id="userName" type="text"
-              class="border p-2 w-full mt-1 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500"
-              placeholder="User Name" required />
-          </div>
-          <div class="mb-4">
-            <input v-model="typeData.joiningDate" id="joiningDate" type="date"
-              class="border p-2 w-full mt-1 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500"
-              placeholder="Joining Date" required />
-          </div>
-          <div class="mb-4">
-            <input v-model="typeData.totalLeaveDays" id="totalLeaveDays" type="number"
+            <input v-model="totalLeaveDays" id="totalLeaveDays" type="number"
               class="border p-2 w-full mt-1 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500"
               placeholder="Total Leave Days" required />
-          </div>
-          <div class="mb-4">
-            <input v-model="typeData.leaveToken" id="leaveToken" type="text"
-              class="border p-2 w-full mt-1 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500"
-              placeholder="Leave Token" required />
-          </div>
-          <div class="mb-4">
-            <input v-model="typeData.leaveBalance" id="leaveBalance" type="number"
-              class="border p-2 w-full mt-1 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500"
-              placeholder="Leave Balance" required />
           </div>
           <div class="flex justify-end">
             <button type="submit" class="bg-emerald-600 text-white px-4 py-2 rounded hover:bg-emerald-700 mr-2">
@@ -90,50 +78,70 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default {
   data() {
     return {
-      leaveTypes: [
-        { id: 1, userName: "Koemsran", joiningDate: "2023-09-01", totalLeaveDays: 30, leaveToken: 5, leaveBalance: 25 },
-        { id: 2, userName: "John Doe", joiningDate: "2022-05-15", totalLeaveDays: 20, leaveToken: 4, leaveBalance: 16 },
-        { id: 3, userName: "Jane Smith", joiningDate: "2020-07-10", totalLeaveDays: 25, leaveToken: 8, leaveBalance: 17 },
-      ],
-      typeData: {
-        userName: '',
-        joiningDate: '',
-        totalLeaveDays: '',
-        leaveToken: '',
-        leaveBalance: '',
-      },
-      typeId: null,
+      leaveBalances: [],
+      leaves: [],
+      totalLeaveDays: '',
+      userId: null,
       showAddTypeModal: false,
       showEditTypeModal: false,
     };
   },
+  mounted() {
+    this.fetchLeaveBalance();
+  },
+
   methods: {
-    addLeaveType() {
+
+    async fetchLeaveBalance() {
+      try {
+        const response = await axios.get('http://127.0.0.1:8000/api/balances/list');
+        this.leaveBalances = response.data.data;
+      } catch (error) {
+        console.error('Error fetching leave balance:', error);
+      }
+    },
+    async deleteBalance(id) {
+      try {
+        await axios.get(`http://127.0.0.1:8000/api/balance/delete/${id}`);
+        this.fetchLeaveBalance();
+      } catch (error) {
+        console.error('Error deleting leave balance:', error);
+      }
+    },
+
+    addLeaveBalance() {
       // Add logic to add leave type
-      const newLeave = { ...this.typeData, id: this.leaveTypes.length + 1 };
-      this.leaveTypes.push(newLeave);
+      const newLeave = { ...this.typeData, id: this.leaveBalance.length + 1 };
+      this.leaveBalance.push(newLeave);
       this.closeModal();
     },
-    editLeaveType(leaveType) {
-      this.typeId = leaveType.id;
-      this.typeData = { ...leaveType };
+    editBalance(leaveBalance) {
+      this.totalLeaveDays = leaveBalance.total_leave;
+      this.userId = leaveBalance.user_id
+      console.log(this.userId)
       this.showEditTypeModal = true;
     },
-    deleteLeaveType(id) {
-      this.leaveTypes = this.leaveTypes.filter(type => type.id !== id);
-    },
-    saveType() {
-      if (this.typeId) {
-        // Update existing leave type
-        const leave = this.leaveTypes.find(l => l.id === this.typeId);
-        Object.assign(leave, this.typeData);
-        this.typeId = null;
+    async saveLeaveBalance() {
+      if (this.userId) {
+        try {
+          await axios.post(`http://127.0.0.1:8000/api/user/update/${this.userId}`, {
+            leave_balance: this.totalLeaveDays
+          });
+          await axios.put(`http://127.0.0.1:8000/api/balance/update/${this.userId}`)
+            .then(response => {
+              console.log('Token balance updated:', response.data);
+            });
+          this.fetchLeaveBalance();
+        } catch (error) {
+          console.error('Error updating leave balance:', error);
+        }
       } else {
         // Add new leave type
-        this.addLeaveType();
+        this.addLeaveBalance();
       }
       this.closeModal();
     },

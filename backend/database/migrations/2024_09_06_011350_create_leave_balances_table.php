@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('subordinates', function (Blueprint $table) {
+        Schema::create('leave_balances', function (Blueprint $table) {
             $table->id();
-            $table->integer('manager_id');
-            $table->integer('subordinator_id');
+            $table->integer('user_id');
+            $table->decimal('token_balance')->default(0);
+            $table->decimal('leave_balance')->default(0);
             $table->timestamps();
         });
     }
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('subordinates');
+        Schema::dropIfExists('leave_balances');
     }
 };

@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DepartementController;
 use App\Http\Controllers\HistoryController;
+use App\Http\Controllers\LeaveBalanceController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SubordinateController;
@@ -65,7 +66,7 @@ Route::delete('/type-leave/delete/{id}', [TypeLeaveController::class, 'destroy']
 // ===================== Leave Request  =========================
 Route::get('/leaves/list', [LeaveController::class, 'index']);
 Route::post('/leave/request', [LeaveController::class, 'store']);
-Route::get('/leave/show/{id}', [LeaveController::class, 'show']);
+Route::get('/leave/show/{userId}', [LeaveController::class, 'show']);
 Route::put('/leave/update/{id}', [LeaveController::class, 'update']);
 Route::delete('/leave/delete/{id}', [LeaveController::class, 'destroy']);
 
@@ -80,6 +81,14 @@ Route::delete('/departement/delete/{id}', [DepartementController::class, 'destro
 Route::get('/histories/list', [HistoryController::class, 'index']);
 Route::post('/history/create', [HistoryController::class, 'store']);
 Route::delete('/history/delete/{id}', [HistoryController::class, 'destroy']);
+
+// ========================= Leave Balance =============================
+Route::get('/balances/list', [LeaveBalanceController::class, 'index']);
+Route::post('/balance/create', [LeaveBalanceController::class, 'store']);
+Route::get('/balance/show/{id}', [LeaveBalanceController::class, 'show']);
+// Route::put('/balance/update/{userId}', [LeaveBalanceController::class, 'update']);
+Route::put('/balance/update/{userId}', [LeaveBalanceController::class, 'updateTokenBalance']);
+Route::delete('/balance/delete/{id}', [LeaveBalanceController::class, 'destroy']);
 
 // ========================= Leave Status  =============================
 Route::post('/leave/approve/{id}', [LeaveController::class, 'approveLeave']);
