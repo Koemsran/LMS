@@ -3,7 +3,7 @@
         :class="[color === 'light' ? 'bg-white' : 'bg-emerald-900 text-white']">
         <div class="flex justify-between items-center mb-4 px-4 mt-4">
             <h2 class="text-2xl font-bold">List of My Subordinates</h2>
-            <button @click="showAddTypeModal = true"
+            <button @click="showAddModal = true"
                 class="bg-emerald-600 text-white px-4 py-3 rounded hover:bg-emerald-700 flex items-center">
                 <i class="fas fa-plus mr-2"></i>
                 Add Subordinate
@@ -54,7 +54,7 @@
                                     ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100'
                                     : 'bg-emerald-800 text-emerald-300 border-emerald-700',
                             ]">
-                           Subordinate Email
+                            Subordinate Email
                         </th>
                         <th class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
                             :class="[
@@ -81,7 +81,6 @@
                             ]">
                             Action
                         </th>
-
                     </tr>
                 </thead>
                 <tbody>
@@ -109,28 +108,31 @@
                             {{ subordinate.created_at }}
                         </td>
                         <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 whitespace-nowrap p-4">
-                            <i style="color: #006ca5" class="fas fa-edit text-lg mr-3"></i>
-                            <i style="color: red" class="fas fa-trash text-lg"></i>
+                            <i @click="editSubordinate(subordinate)" style="color: #006ca5"
+                                class="fas fa-edit text-lg mr-3"></i>
+                            <i @click="removeSubordinate(subordinate.id)" style="color: red"
+                                class="fas fa-trash text-lg"></i>
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
-        <!-- Add/Edit Department Modal -->
-        <div v-if="showAddTypeModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
+        <!-- Add/Edit Subordinate Modal -->
+        <div v-if="showAddModal || showEditModal"
+            class="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
             <div class="bg-white p-6 rounded-lg shadow-lg" style="max-width: 800px; width: 100%;">
-                <h3 class="text-lg font-bold p-3">Add Subordinate</h3>
+                <h3 class="text-lg font-bold p-3">{{ subId ? 'Edit Subordinate' : 'Add Subordinate' }}</h3>
                 <!-- Form Start -->
-                <form @submit.prevent="saveType" class="p-3">
+                <form @submit.prevent="SaveSubordinate" class="p-3">
                     <div class="mb-4">
-                        <select name="user" id="user"
+                        <select v-model="manager_id" name="manager" id="manager"
                             class="border py-2 px-4 w-full mt-1 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500">
                             <option value="">Select Manager</option>
                             <option v-for="user in users" :key="user.id" :value="user.id">
                                 {{ user.name }}
                             </option>
                         </select>
-                        <select name="user" id="user"
+                        <select name="subordinate" v-model="subordinate_id" id="subordinate"
                             class="border py-2 px-4 w-full mt-1 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500">
                             <option value="">Select Subordinate</option>
                             <option v-for="user in users" :key="user.id" :value="user.id">
@@ -150,8 +152,6 @@
                     </div>
                 </form>
             </div>
-
-
         </div>
     </div>
 </template>
@@ -163,26 +163,92 @@ export default {
     data() {
         return {
             subordinates: [],
-            showAddTypeModal: false,
+            users: [],
+            showAddModal: false,
+            showEditModal: false,
+            manager_id: '',
+            subordinate_id: '',
+            subId: null
         };
     },
     mounted() {
+        this.fetchSubordinates();
         this.fetchUsers();
     },
     methods: {
         closeModal() {
-            this.typeName = '';
-            this.typeId = null;
-            this.showAddTypeModal = false;
+            this.subId = null;
+            this.showAddModal = false;
+            this.showEditModal = false;
         },
-        async fetchUsers() {
+        async fetchSubordinates() {
             try {
                 const response = await axios.get('http://127.0.0.1:8000/api/subordinates/list');
                 this.subordinates = response.data.data;
+
             } catch (error) {
                 console.error('Error fetching users:', error);
             }
         },
+        async fetchUsers() {
+            try {
+                const response = await axios.get('http://127.0.0.1:8000/api/users/list');
+                this.users = response.data.data;
+
+            } catch (error) {
+                console.error('Error fetching users:', error);
+            }
+        },
+        async createSubordinate() {
+            try {
+                await axios.post('http://127.0.0.1:8000/api/subordinate/assign', {
+                    manager_id: this.manager_id,
+                    subordinator_id: this.subordinate_id,
+                });
+                alert("Subordinate assigned successfully");
+                this.closeModal(); 
+                this.fetchSubordinates(); 
+            } catch (error) {
+                console.error('Error assigning subordinate:', error.response?.data?.message || error.message);
+            }
+        },
+
+        async editSubordinate(subordinate) {
+            this.subId = subordinate.id;
+            this.manager_id = subordinate.manager_id;
+            this.subordinate_id = subordinate.subordinator_id;
+            this.showEditModal = true;
+        },
+        async SaveSubordinate() {
+            if (this.subId) {
+                try {
+                    await axios.put(`http://127.0.0.1:8000/api/subordinate/update/${this.subId}`, {
+                        manager_id: this.manager_id,
+                        subordinator_id: this.subordinate_id,
+                    });
+                    alert("Subordinate updated successfully");
+                    this.fetchSubordinates();  // Refresh the subordinates list after successful assignment
+                    this.closeModal(); // Close the modal after assigning
+                } catch (error) {
+                    console.error('Error assigning subordinate:', error.response?.data?.message || error.message);
+                }
+            }
+            else {
+                this.createSubordinate()
+            }
+            this.fetchSubordinates()
+            this.closeModal()
+        },
+        async removeSubordinate(id) {
+            try {
+                await axios.delete(`http://127.0.0.1:8000/api/subordinate/remove/${id}`);
+                alert("Subordinate removed successfully");
+                this.fetchSubordinates();  // Refresh the subordinates list after successful assignment
+            } catch (error) {
+                console.error('Error removing subordinate:', error.response?.data?.message || error.message);
+            }
+        }
+
     },
     props: {
         color: {

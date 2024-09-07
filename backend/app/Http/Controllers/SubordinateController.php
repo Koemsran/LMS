@@ -55,7 +55,7 @@ class SubordinateController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function updateSubordinate(Request $request, string $id)
     {
         Subordinate::store($request, $id);
         return response()->json(['success'=> true, "message"=>"Subordinate updated successfully"], 201);

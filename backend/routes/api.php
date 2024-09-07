@@ -98,4 +98,5 @@ Route::post('/leave/cancel-request/{id}', [LeaveController::class, 'cancelLeaveR
 // ========================= Subodinate  =============================
 Route::get('/subordinates/list', [SubordinateController::class, 'getSubordinates']);
 Route::post('/subordinate/assign', [SubordinateController::class, 'assignSubordinate']);
-Route::delete('/subordinate/remove', [SubordinateController::class, 'removeSubordinate']);
+Route::delete('/subordinate/remove/{id}', [SubordinateController::class, 'removeSubordinate']);
+Route::put('/subordinate/update/{id}', [SubordinateController::class, 'updateSubordinate']);

@@ -22,14 +22,14 @@ class AdminUserSeeder extends Seeder
             'email' => 'admin@gmail.com',
             'leave_balance' => 2,
             'password' => Hash::make('password'), // Change 'password' to a more secure one
-            'profile' => 'images/user.jpg',
+            'profile' => 'images/admin.jpg',
         ]);
         $manager = User::create([
             'name' => 'Koemsran',
             'email' => 'manager@gmail.com',
             'leave_balance' => 2,
             'password' => Hash::make('password'), // Change 'password' to a more secure one
-            'profile' => 'images/user.jpg',
+            'profile' => 'images/manager.jpg',
         ]);
         
         $permission = Permission::create(['name' => 'Role access']);

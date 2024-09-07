@@ -160,9 +160,9 @@ export default {
 <style scoped>
 .profile-img {
   margin-top: -80px;
-  width: 200px;
+  width: 250px;
   /* Fixed width */
-  height: 200px;
+  height: 180px;
   /* Fixed height */
   object-fit: cover;
   /* Ensures the image covers the area without stretching */
