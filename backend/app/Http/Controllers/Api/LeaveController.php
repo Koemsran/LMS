@@ -16,7 +16,7 @@ class LeaveController extends Controller
      */
     public function index()
     {
-        $leaves = Leave::all();
+        $leaves = Leave::latest()->get();
         $leaves = LeaveResource::collection($leaves);
         return response()->json(['success' => true, "data" => $leaves], 200);
     }

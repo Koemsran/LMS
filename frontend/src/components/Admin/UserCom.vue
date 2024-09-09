@@ -91,7 +91,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(user, index) in users" :key="user.id">
+          <tr v-for="(user, index) in filteredUsers" :key="user.id">
 
             <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 whitespace-nowrap p-4">
               {{ index+1 }}
@@ -140,15 +140,25 @@ import axios from 'axios';
 export default {
   data() {
     return {
-      users: [
-
-      ],
+      users: [],
+      userId:null
     };
   },
   
   mounted() {
     this.fetchUsers();
+    this.fetchUser();
   },
+  computed: {
+  filteredUsers() {
+    const filteredUsers = this.users.filter(user => {
+      return user.id !== this.userId && !user.roles.some(role => role.name === 'Admin');
+
+    });
+    return filteredUsers;
+    
+  }
+},
   methods: {
     async fetchUsers() {
       try {
@@ -164,6 +174,19 @@ export default {
         this.fetchUsers();
       } catch (error) {
         console.error('Error fetching users:', error);
+      }
+    },
+    async fetchUser() {
+      try {
+        const token = localStorage.getItem('authToken');
+        const response = await axios.get('http://127.0.0.1:8000/api/me', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        this.userId = response.data.data.id;
+      } catch (error) {
+        console.error('Error fetching user:', error);
       }
     },
   },

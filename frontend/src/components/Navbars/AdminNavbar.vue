@@ -160,15 +160,6 @@ export default {
     const submitForm = async () => {
       if (validateDates()) { // Validate dates before submission
         try {
-          // First, fetch the user's current leave balance
-          const leaveBalanceResponse = await axios.get(`http://127.0.0.1:8000/api/leave/show/${userId.value}`);
-          const leaveBalanceData = leaveBalanceResponse.data;
-          console.log(leaveBalanceData)
-          // Check if the requested leave duration exceeds the available leave balance
-          if (form.value.duration > leaveBalanceData.leave_balance) {
-            alert('Cannot request leave. Requested leave duration exceeds your available leave balance.');
-            return; // Stop further execution
-          }
 
           // Proceed with leave request if the duration is valid
           await axios.post('http://127.0.0.1:8000/api/leave/request', {

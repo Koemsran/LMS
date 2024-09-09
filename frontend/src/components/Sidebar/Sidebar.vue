@@ -199,12 +199,12 @@
         <!-- Divider -->
         <hr class="my-4 md:min-w-full" />
         <!-- Heading -->
-        <h6 class="md:min-w-full text-blueGray-500 text-xs uppercase font-bold block pt-1 pb-4 no-underline">
+        <h6 v-if="user" class="md:min-w-full text-blueGray-500 text-xs uppercase font-bold block pt-1 pb-4 no-underline">
           Admin Pages
         </h6>
         <!-- Navigation -->
 
-        <ul class="md:flex-col md:min-w-full flex flex-col list-none md:mb-4">
+        <ul v-if="user" class="md:flex-col md:min-w-full flex flex-col list-none md:mb-4">
           <li class="items-center">
             <router-link class="text-blueGray-700 hover:text-blueGray-500 text-xs uppercase py-3 font-bold block"
               to="/admin/users">
@@ -235,6 +235,7 @@
 ); }
 
 <script>
+import axios from "axios";
 import NotificationDropdown from "@/components/Dropdowns/NotificationDropdown.vue";
 import UserDropdown from "@/components/Dropdowns/UserDropdown.vue";
 
@@ -242,11 +243,28 @@ export default {
   data() {
     return {
       collapseShow: "hidden",
+      user: false
     };
+  },
+  mounted(){
+    this.fetchUser();
   },
   methods: {
     toggleCollapseShow: function (classes) {
       this.collapseShow = classes;
+    },
+    async fetchUser() {
+      try {
+        const token = localStorage.getItem('authToken');
+        const response = await axios.get('http://127.0.0.1:8000/api/me', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        this.user = response.data.data.roles.some(role => role.name === 'Admin');
+      } catch (error) {
+        console.error('Error fetching user:', error);
+      }
     },
   },
   components: {
