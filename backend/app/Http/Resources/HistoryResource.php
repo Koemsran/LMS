@@ -17,6 +17,7 @@ class HistoryResource extends JsonResource
         return [
             'id' => $this->id,
             'user_name' => $this->user->name,
+            'user_id' => $this->user->id,
             'leave_type' => $this->leave->leaveType->name,
             'date_from' => $this->leave->date_from,
             'date_to' => $this->leave->date_to,

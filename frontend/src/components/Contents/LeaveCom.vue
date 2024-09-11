@@ -134,7 +134,8 @@
                                 {{ leave.reason }}
                             </td>
                             <td class="border-t-0 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                                <a @click="cancelLeaveRequest(leave.id)" class="text-red-500 hover:text-blue-700 mr-4" title="Cancel">
+                                <a @click="cancelLeaveRequest(leave.id)" class="text-red-500 hover:text-blue-700 mr-4"
+                                    title="Cancel">
                                     <i class="fas fa-times text-2xl" style="color: red"></i>
                                 </a>
                             </td>
@@ -264,23 +265,24 @@ export default {
                 console.error('Error fetching leaves:', error);
             }
         };
-        // Fetch leave requests
+
+        // Cancel leave request
         const cancelLeaveRequest = async (id) => {
             try {
                 await axios.post(`http://127.0.0.1:8000/api/leave/cancel-request/${id}`);
                 await fetchLeaveRequest();
             } catch (error) {
-                console.error('Error caceling leave request:', error);
+                console.error('Error canceling leave request:', error);
             }
         };
 
-        // Filter leaves based on the selected status
+        // Filter leaves based on the selected status and user
         const filteredLeaves = computed(() => {
+            const filtered = leaves.value.filter(leave => leave.status !== 'cancelled' && leave.user_id === userId.value);
             if (filter.value === 'all') {
-                return leaves.value.filter(leave => leave.status == 'pending');
-                // return leaves.value.filter(leave => leave.user_id === userId.value);
+                return filtered;
             }
-            return leaves.value.filter(leave => leave.status === filter.value && leave.user_id === userId.value);
+            return filtered.filter(leave => leave.status === filter.value);
         });
 
         // Handle filter changes
@@ -314,6 +316,7 @@ export default {
     }
 };
 </script>
+
 
 <style>
 /* Add custom transition for the modal if needed */

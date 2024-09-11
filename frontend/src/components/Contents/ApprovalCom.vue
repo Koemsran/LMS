@@ -36,11 +36,6 @@
                     @click="filterHistories('rejected')">
                     Rejected
                 </button>
-                <button class="py-2 px-4 rounded focus:outline-none"
-                    :class="{ 'bg-red-500 text-white': filter === 'cancelled', 'border border-red-500': filter !== 'cancelled' }"
-                    @click="filterHistories('cancelled')">
-                    Cancelled
-                </button>
             </div>
         </div>
 
@@ -91,8 +86,10 @@
                     <tr v-for="leave in filteredLeaves" :key="leave.id">
                         <th
                             class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center">
-                            <img v-if="leave.profile" :src="`http://127.0.0.1:8000/storage/${leave.profile}`" class="h-12 w-12 bg-white rounded-full border" alt="..." />
-                            <img v-else src="../../assets/img/def-logo.png" class="h-12 w-12 bg-white rounded-full border" alt="..." />
+                            <img v-if="leave.profile" :src="`http://127.0.0.1:8000/storage/${leave.profile}`"
+                                class="h-12 w-12 bg-white rounded-full border" alt="..." />
+                            <img v-else src="../../assets/img/def-logo.png"
+                                class="h-12 w-12 bg-white rounded-full border" alt="..." />
                             <span class="ml-3 font-bold"
                                 :class="[color === 'light' ? 'text-blueGray-600' : 'text-white']">
                                 {{ leave.user_name }}
@@ -166,19 +163,41 @@ export default {
             leaves: [],
             filter: 'all', // Default filter status
             dropdownPopoverShow: false,
+            user: '',
+
         };
     },
 
     mounted() {
         this.fetchLeaveRequest();
+        this.fetchUser();
     },
     computed: {
         filteredLeaves() {
-            if (this.filter === 'all') {
-                return this.leaves;
+            let filteredLeaves = [];
+
+            // Check if user roles are defined and loop through roles
+            if (this.user) {
+                this.user.roles.forEach(role => {
+                    if (role.name === "Admin") {
+                        // If Admin, filter leaves that are not cancelled
+                        filteredLeaves = this.leaves.filter(leave => leave.status !== 'cancelled');
+                    } else {
+                        // If not Admin, filter leaves by manager_id and not cancelled
+                        filteredLeaves = this.leaves.filter(leave => leave.status !== 'cancelled' && leave.manager_id === this.user.id);
+                    }
+                });
             }
-            return this.leaves.filter(leave => leave.status === this.filter);
+            // If 'all' is selected, return all filtered leaves
+            if (this.filter === 'all') {
+                return filteredLeaves;
+            }
+
+            // Return filtered leaves based on the selected status
+            return filteredLeaves.filter(leave => leave.status === this.filter);
         }
+
+
     },
     methods: {
         async fetchLeaveRequest() {
@@ -229,7 +248,20 @@ export default {
             } catch (error) {
                 console.error('Error updating leave status to cancel:', error);
             }
-        }
+        },
+        async fetchUser() {
+            try {
+                const token = localStorage.getItem('authToken');
+                const response = await axios.get('http://127.0.0.1:8000/api/me', {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                this.user = response.data.data;
+            } catch (error) {
+                console.error('Error fetching user:', error);
+            }
+        },
     },
     props: {
         color: {

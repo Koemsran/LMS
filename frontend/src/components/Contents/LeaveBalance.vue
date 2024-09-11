@@ -28,7 +28,7 @@
             </tr>
           </thead>
           <tbody class="bg-white divide-y divide-gray-200">
-            <tr v-for="(balance, index) in leaveBalances" :key="balance.id">
+            <tr v-for="(balance, index) in filteredLeavesBalance" :key="balance.id">
               <td class="px-6 py-4 text-sm text-gray-900">{{ index + 1 }}</td>
               <td class="px-6 py-4 text-sm text-gray-900">{{ balance.user_name }}</td>
               <td class="px-6 py-4 text-sm text-gray-900">{{ balance.joining_date }}</td>
@@ -36,7 +36,8 @@
               <td class="px-6 py-4 text-sm text-gray-900">{{ balance.token_balance }}</td>
               <td class="px-6 py-4 text-sm text-gray-900">{{ balance.leave_balance }}</td>
               <td class="px-6 py-4 text-sm text-gray-500">
-                <router-link :to="{ path: '/admin/leave-balance-detail', query: { id: balance.id } }" class="text-indigo-600 hover:text-indigo-900 mr-2">
+                <router-link :to="{ path: '/admin/leave-balance-detail', query: { id: balance.id } }"
+                  class="text-indigo-600 hover:text-indigo-900 mr-2">
                   Detail |
                 </router-link>
                 <button @click="editBalance(balance)" class="text-teal-600 hover:text-indigo-900 mr-2">
@@ -88,12 +89,38 @@ export default {
       userId: null,
       showAddTypeModal: false,
       showEditTypeModal: false,
+      user: ''
     };
   },
   mounted() {
     this.fetchLeaveBalance();
+    this.fetchUser();
   },
+  computed: {
+    filteredLeavesBalance() {
+      let filteredLeavesBalance = [];
 
+      // Check if user roles are defined and loop through roles
+      if (this.user) {
+        this.user.roles.forEach(role => {
+          if (role.name === "Admin") {
+            // If Admin, filter leaves that are not cancelled
+            filteredLeavesBalance = this.leaveBalances.filter(leave => leave.status !== 'cancelled');
+          } else {
+            // If not Admin, filter leaves by manager_id and not cancelled
+            filteredLeavesBalance = this.leaveBalances.filter(leave => leave.status !== 'cancelled' && leave.manager_id === this.user.id);
+          }
+        });
+      }
+      // If 'all' is selected, return all filtered leaves
+      if (this.filter === 'all') {
+        return filteredLeavesBalance;
+      }
+
+      // Return filtered leaves based on the selected status
+      return filteredLeavesBalance.filter(leave => leave.status === this.filter);
+    }
+  },
   methods: {
 
     async fetchLeaveBalance() {
@@ -144,6 +171,19 @@ export default {
         this.addLeaveBalance();
       }
       this.closeModal();
+    },
+    async fetchUser() {
+      try {
+        const token = localStorage.getItem('authToken');
+        const response = await axios.get('http://127.0.0.1:8000/api/me', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        this.user = response.data.data;
+      } catch (error) {
+        console.error('Error fetching user:', error);
+      }
     },
     closeModal() {
       this.typeData = {

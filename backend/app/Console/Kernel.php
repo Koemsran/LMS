@@ -14,7 +14,8 @@ class Kernel extends ConsoleKernel
     {
         // Schedule the leave balance update command to run monthly
         // $schedule->command('leave:update-balance')->monthlyOn(1, '00:00');
-        $schedule->command('leave:update-balance')->everyMinute();
+        $schedule->command('leave:update-balance')->everyFiveMinutes();
+        
     }
 
     /**

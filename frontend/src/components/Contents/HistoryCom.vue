@@ -114,15 +114,17 @@ export default {
   data() {
     return {
       leavesHistories: [],
-      filter: 'all' // Default filter
+      filter: 'all' ,// Default filter
+      user:''
     };
   },
   mounted() {
     this.fetchHistories();
+    this.fetchUser();
   },
   computed: {
     filteredHistories() {
-      const filteredLeaves = this.leavesHistories.filter(leave => leave.status !== 'pending');
+      const filteredLeaves = this.leavesHistories.filter(leave => leave.status !== 'pending' && leave.user_id === this.user.id);
       if (this.filter === 'all') {
         return filteredLeaves;
       }
@@ -146,6 +148,19 @@ export default {
         this.fetchHistories(); // Refresh the data after deletion
       } catch (error) {
         console.error('Error deleting history:', error);
+      }
+    },
+    async fetchUser() {
+      try {
+        const token = localStorage.getItem('authToken');
+        const response = await axios.get('http://127.0.0.1:8000/api/me', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        this.user = response.data.data;
+      } catch (error) {
+        console.error('Error fetching user:', error);
       }
     },
     filterHistories(status) {

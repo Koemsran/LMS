@@ -8,6 +8,7 @@ use App\Http\Resources\LeaveResource;
 use App\Models\History;
 use App\Models\Leave;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LeaveController extends Controller
 {
@@ -37,7 +38,7 @@ class LeaveController extends Controller
         $leave = Leave::store($request);
         History::create([
             'leave_id' => $leave->id,
-            'user_id' => 1,
+            'user_id' => $leave->user_id,
             'created_at' => now(),
         ]);
         return response()->json(['success' => true, 'message' => 'Leave created successfully'], 201);
