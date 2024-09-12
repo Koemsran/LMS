@@ -3,7 +3,12 @@
         :class="[color === 'light' ? 'bg-white' : 'bg-emerald-900 text-white']">
         <div class="flex justify-between items-center mb-4 px-4 mt-4">
             <h2 class="text-2xl font-bold">List of My Subordinates</h2>
-            <button @click="showAddModal = true"
+            <button v-if="!manager" @click="showAddModal = true"
+                class="bg-emerald-600 text-white px-4 py-3 rounded hover:bg-emerald-700 flex items-center">
+                <i class="fas fa-plus mr-2"></i>
+                Add Subordinate
+            </button>
+            <button v-if="admin" @click="showAddModal = true"
                 class="bg-emerald-600 text-white px-4 py-3 rounded hover:bg-emerald-700 flex items-center">
                 <i class="fas fa-plus mr-2"></i>
                 Add Subordinate
@@ -168,12 +173,15 @@ export default {
             showEditModal: false,
             manager_id: '',
             subordinate_id: '',
-            subId: null
+            subId: null,
+            user: '',
+            manager:false,
         };
     },
     mounted() {
         this.fetchSubordinates();
         this.fetchUsers();
+        this.fetchUser();
     },
     methods: {
         closeModal() {
@@ -197,6 +205,20 @@ export default {
 
             } catch (error) {
                 console.error('Error fetching users:', error);
+            }
+        },
+        async fetchUser() {
+            try {
+                const token = localStorage.getItem('authToken');
+                const response = await axios.get('http://127.0.0.1:8000/api/me', {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                this.user = response.data.data;
+                this.manager = response.data.data.roles.some(role => role.name === 'Manager')
+            } catch (error) {
+                console.error('Error fetching user:', error);
             }
         },
         async createSubordinate() {

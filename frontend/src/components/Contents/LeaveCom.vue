@@ -86,6 +86,10 @@
                             </th>
                             <th :class="[color === 'light' ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100' : 'bg-emerald-800 text-emerald-300 border-emerald-700']"
                                 class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+                                Requested
+                            </th>
+                            <th :class="[color === 'light' ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100' : 'bg-emerald-800 text-emerald-300 border-emerald-700']"
+                                class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
                                 Action
                             </th>
                             <th :class="[color === 'light' ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100' : 'bg-emerald-800 text-emerald-300 border-emerald-700']"
@@ -133,10 +137,14 @@
                             <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs table-cell-wrap p-4">
                                 {{ leave.reason }}
                             </td>
+                            <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs table-cell-wrap p-4">
+                                {{ leave.created_at }}
+                            </td>
                             <td class="border-t-0 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                                 <a @click="cancelLeaveRequest(leave.id)" class="text-red-500 hover:text-blue-700 mr-4"
                                     title="Cancel">
-                                    <i class="fas fa-times text-2xl" style="color: red"></i>
+                                    <!-- <i class="fas fa-times text-2xl" style="color: red"></i> -->
+                                    <button class="bg-red-500 btn text-xs text-white px-3 py-1 border rounded">Cancel</button>
                                 </a>
                             </td>
                             <!-- <td class="border-t-0 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">

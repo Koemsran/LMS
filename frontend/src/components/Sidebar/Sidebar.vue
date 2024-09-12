@@ -59,11 +59,11 @@
         <hr class="my-4 md:min-w-full" />
         <!-- Heading -->
         <h6 class="md:min-w-full text-blueGray-500 text-xs uppercase font-bold block pt-1 pb-4 no-underline">
-          Admin Layout Pages
+          User Layout Pages
         </h6>
         <!-- Navigation -->
 
-        <ul class="md:flex-col md:min-w-full flex flex-col list-none">
+        <ul class="md:flex-col md:min-w-full flex flex-col list-none" v-if="admin">
           <li class="items-center">
             <router-link to="/admin/dashboard" v-slot="{ href, navigate, isActive }">
               <a :href="href" @click="navigate" class="text-xs uppercase py-3 font-bold block" :class="[
@@ -164,12 +164,12 @@
                   ? 'text-emerald-500 hover:text-emerald-600'
                   : 'text-blueGray-700 hover:text-blueGray-500',
               ]">
-                <i class="fas fa-calendar-alt mr-2 text-sm"
-                  :class="[isActive ? 'opacity-75' : 'text-blueGray-300']"></i>
+                <i class="fas fa-clock mr-2 text-sm" :class="[isActive ? 'opacity-75' : 'text-blueGray-300']"></i>
                 History
               </a>
             </router-link>
           </li>
+
           <li class="items-center">
             <router-link to="/admin/calendars" v-slot="{ href, navigate, isActive }">
               <a :href="href" @click="navigate" class="text-xs uppercase py-3 font-bold block" :class="[
@@ -179,7 +179,165 @@
               ]">
                 <i class="fas fa-calendar-alt mr-2 text-sm"
                   :class="[isActive ? 'opacity-75' : 'text-blueGray-300']"></i>
-                Chalendar
+                Calendar
+              </a>
+            </router-link>
+          </li>
+          <li class="items-center">
+            <router-link to="/admin/reports" v-slot="{ href, navigate, isActive }">
+              <a :href="href" @click="navigate" class="text-xs uppercase py-3 font-bold block" :class="[
+                isActive
+                  ? 'text-emerald-500 hover:text-emerald-600'
+                  : 'text-blueGray-700 hover:text-blueGray-500',
+              ]">
+                <i class="fas fa-chart-line mr-2 text-sm" :class="[isActive ? 'opacity-75' : 'text-blueGray-300']"></i>
+                Report
+              </a>
+            </router-link>
+          </li>
+        </ul>
+        <ul class="md:flex-col md:min-w-full flex flex-col list-none" v-if="manager">
+          <li class="items-center">
+            <router-link to="/admin/dashboard" v-slot="{ href, navigate, isActive }">
+              <a :href="href" @click="navigate" class="text-xs uppercase py-3 font-bold block" :class="[
+                isActive
+                  ? 'text-emerald-500 hover:text-emerald-600'
+                  : 'text-blueGray-700 hover:text-blueGray-500',
+              ]">
+                <i class="fas fa-tachometer-alt mr-2 text-sm"
+                  :class="[isActive ? 'opacity-75' : 'text-blueGray-300']"></i>
+                Dashboard
+              </a>
+            </router-link>
+          </li>
+          <li class="items-center">
+            <router-link to="/admin/approvals" v-slot="{ href, navigate, isActive }">
+              <a :href="href" @click="navigate" class="text-xs uppercase py-3 font-bold block" :class="[
+                isActive
+                  ? 'text-emerald-500 hover:text-emerald-600'
+                  : 'text-blueGray-700 hover:text-blueGray-500',
+              ]">
+                <i class="fas fa-check-circle mr-2 text-sm"
+                  :class="[isActive ? 'opacity-75' : 'text-blueGray-300']"></i>
+                Approval
+              </a>
+            </router-link>
+          </li>
+          <li class="items-center">
+            <router-link to="/admin/subordinates" v-slot="{ href, navigate, isActive }">
+              <a :href="href" @click="navigate" class="text-xs uppercase py-3 font-bold block" :class="[
+                isActive
+                  ? 'text-emerald-500 hover:text-emerald-600'
+                  : 'text-blueGray-700 hover:text-blueGray-500',
+              ]">
+                <i class="fas fa-users mr-2 text-sm" :class="[isActive ? 'opacity-75' : 'text-blueGray-300']"></i>
+                Subordinates
+              </a>
+            </router-link>
+          </li>
+          <li class="items-center">
+            <router-link to="/admin/leave-types" v-slot="{ href, navigate, isActive }">
+              <a :href="href" @click="navigate" class="text-xs uppercase py-3 font-bold block" :class="[
+                isActive
+                  ? 'text-emerald-500 hover:text-emerald-600'
+                  : 'text-blueGray-700 hover:text-blueGray-500',
+              ]">
+                <i class="fas fa-clipboard-list mr-2 text-sm"
+                  :class="[isActive ? 'opacity-75' : 'text-blueGray-300']"></i>
+                Leave Type
+              </a>
+            </router-link>
+          </li>
+          <li class="items-center">
+            <router-link to="/admin/leave-balance" v-slot="{ href, navigate, isActive }">
+              <a :href="href" @click="navigate" class="text-xs uppercase py-3 font-bold block" :class="[
+                isActive
+                  ? 'text-emerald-500 hover:text-emerald-600'
+                  : 'text-blueGray-700 hover:text-blueGray-500',
+              ]">
+                <i class="fas fa-calendar-check mr-2 text-sm"
+                  :class="[isActive ? 'opacity-75' : 'text-blueGray-300']"></i>
+                Leave Balance
+              </a>
+            </router-link>
+          </li>
+          <li class="items-center">
+            <router-link to="/admin/histories" v-slot="{ href, navigate, isActive }">
+              <a :href="href" @click="navigate" class="text-xs uppercase py-3 font-bold block" :class="[
+                isActive
+                  ? 'text-emerald-500 hover:text-emerald-600'
+                  : 'text-blueGray-700 hover:text-blueGray-500',
+              ]">
+                <i class="fas fa-clock mr-2 text-sm" :class="[isActive ? 'opacity-75' : 'text-blueGray-300']"></i>
+                History
+              </a>
+            </router-link>
+          </li>
+
+          <li class="items-center">
+            <router-link to="/admin/calendars" v-slot="{ href, navigate, isActive }">
+              <a :href="href" @click="navigate" class="text-xs uppercase py-3 font-bold block" :class="[
+                isActive
+                  ? 'text-emerald-500 hover:text-emerald-600'
+                  : 'text-blueGray-700 hover:text-blueGray-500',
+              ]">
+                <i class="fas fa-calendar-alt mr-2 text-sm"
+                  :class="[isActive ? 'opacity-75' : 'text-blueGray-300']"></i>
+                Calendar
+              </a>
+            </router-link>
+          </li>
+        </ul>
+        <ul class="md:flex-col md:min-w-full flex flex-col list-none" v-if="staff">
+          <li class="items-center">
+            <router-link to="/admin/leaves" v-slot="{ href, navigate, isActive }">
+              <a :href="href" @click="navigate" class="text-xs uppercase py-3 font-bold block" :class="[
+                isActive
+                  ? 'text-emerald-500 hover:text-emerald-600'
+                  : 'text-blueGray-700 hover:text-blueGray-500',
+              ]">
+                <i class="fas fa-clipboard-check mr-2 text-sm"
+                  :class="[isActive ? 'opacity-75' : 'text-blueGray-300']"></i>
+                Leave Management
+              </a>
+            </router-link>
+          </li>
+          <li class="items-center">
+            <router-link to="/admin/leave-balance-detail" v-slot="{ href, navigate, isActive }">
+              <a :href="href" @click="navigate" class="text-xs uppercase py-3 font-bold block" :class="[
+                isActive
+                  ? 'text-emerald-500 hover:text-emerald-600'
+                  : 'text-blueGray-700 hover:text-blueGray-500',
+              ]">
+                <i class="fas fa-calendar-check mr-2 text-sm"
+                  :class="[isActive ? 'opacity-75' : 'text-blueGray-300']"></i>
+                Leave Balance
+              </a>
+            </router-link>
+          </li>
+          <li class="items-center">
+            <router-link to="/admin/histories" v-slot="{ href, navigate, isActive }">
+              <a :href="href" @click="navigate" class="text-xs uppercase py-3 font-bold block" :class="[
+                isActive
+                  ? 'text-emerald-500 hover:text-emerald-600'
+                  : 'text-blueGray-700 hover:text-blueGray-500',
+              ]">
+                <i class="fas fa-clock mr-2 text-sm" :class="[isActive ? 'opacity-75' : 'text-blueGray-300']"></i>
+                History
+              </a>
+            </router-link>
+          </li>
+
+          <li class="items-center">
+            <router-link to="/admin/calendars" v-slot="{ href, navigate, isActive }">
+              <a :href="href" @click="navigate" class="text-xs uppercase py-3 font-bold block" :class="[
+                isActive
+                  ? 'text-emerald-500 hover:text-emerald-600'
+                  : 'text-blueGray-700 hover:text-blueGray-500',
+              ]">
+                <i class="fas fa-calendar-alt mr-2 text-sm"
+                  :class="[isActive ? 'opacity-75' : 'text-blueGray-300']"></i>
+                Calendar
               </a>
             </router-link>
           </li>
@@ -199,12 +357,13 @@
         <!-- Divider -->
         <hr class="my-4 md:min-w-full" />
         <!-- Heading -->
-        <h6 v-if="user" class="md:min-w-full text-blueGray-500 text-xs uppercase font-bold block pt-1 pb-4 no-underline">
+        <h6 v-if="admin"
+          class="md:min-w-full text-blueGray-500 text-xs uppercase font-bold block pt-1 pb-4 no-underline">
           Admin Pages
         </h6>
         <!-- Navigation -->
 
-        <ul v-if="user" class="md:flex-col md:min-w-full flex flex-col list-none md:mb-4">
+        <ul v-if="admin" class="md:flex-col md:min-w-full flex flex-col list-none md:mb-4">
           <li class="items-center">
             <router-link class="text-blueGray-700 hover:text-blueGray-500 text-xs uppercase py-3 font-bold block"
               to="/admin/users">
@@ -243,10 +402,12 @@ export default {
   data() {
     return {
       collapseShow: "hidden",
-      user: false
+      admin: false,
+      staff: false,
+      manager: false,
     };
   },
-  mounted(){
+  mounted() {
     this.fetchUser();
   },
   methods: {
@@ -261,7 +422,9 @@ export default {
             Authorization: `Bearer ${token}`
           }
         });
-        this.user = response.data.data.roles.some(role => role.name === 'Admin');
+        this.admin = response.data.data.roles.some(role => role.name === 'Admin');
+        this.staff = response.data.data.roles.some(role => role.name === 'Staff');
+        this.manager = response.data.data.roles.some(role => role.name === 'Manager');
       } catch (error) {
         console.error('Error fetching user:', error);
       }

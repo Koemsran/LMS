@@ -124,7 +124,7 @@ export default {
   },
   computed: {
     filteredHistories() {
-      const filteredLeaves = this.leavesHistories.filter(leave => leave.status !== 'pending' && leave.user_id === this.user.id);
+      const filteredLeaves = this.leavesHistories.filter(leave => leave.status !== 'pending' && (leave.user_id === this.user.id || leave.manager_id === this.user.id));
       if (this.filter === 'all') {
         return filteredLeaves;
       }

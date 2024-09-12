@@ -79,10 +79,13 @@ export default {
           email: form.value.email,
           password: form.value.password,
         });
-        console.log(response.data)
         localStorage.setItem('authToken', response.data.access_token);
-        localStorage.setItem('isAuthenticated', 'true'); 
-        router.push('/');
+        localStorage.setItem('isAuthenticated', 'true');
+        if (response.data.roles.includes('Staff')) {
+          router.push('/admin/leaves');
+        } else {
+          router.push('/');
+        }
       } catch (error) {
         // Handle specific error messages
         if (error.response.status === 401) {

@@ -45,12 +45,15 @@ class AuthController extends Controller
 
         // Generate the token
         $token = $user->createToken('auth_token')->plainTextToken;
+        
+        $roles = $user->roles->pluck('name'); // Adjust 'name' to the column where the role name is stored
 
-        // Return success response with token
+        // Return success response with token and roles
         return response()->json([
             'message'       => 'Login success',
             'access_token'  => $token,
-            'token_type'    => 'Bearer'
+            'token_type'    => 'Bearer',
+            'roles'         => $roles // Return the roles of the user
         ]);
     }
 
