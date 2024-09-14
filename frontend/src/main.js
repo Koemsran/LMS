@@ -1,5 +1,7 @@
 import { createApp } from "vue";
 import { createWebHistory, createRouter } from "vue-router";
+import { createPinia } from 'pinia'; 
+
 
 // styles
 
@@ -8,7 +10,6 @@ import "@/assets/styles/tailwind.css";
 // mouting point for the whole app
 
 import App from "@/App.vue";
-
 // layouts
 
 import Admin from "@/layouts/Admin.vue";
@@ -177,6 +178,7 @@ const router = createRouter({
   history: createWebHistory(),
   routes,
 });
+const pinia = createPinia(); // Create a Pinia instance
 
 router.beforeEach((to, from, next) => {
   const publicRoutes = ['/auth/login', '/auth/register'];
@@ -190,4 +192,4 @@ router.beforeEach((to, from, next) => {
     next('/auth/login'); // Redirect to login if not authenticated
   }
 });
-createApp(App).use(router).mount("#app");
+createApp(App).use(router).use(pinia).mount("#app");

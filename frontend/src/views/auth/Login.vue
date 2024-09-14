@@ -2,16 +2,12 @@
   <div class="container mx-auto px-4 mt-32">
     <div class="flex content-center items-center justify-center h-full">
       <div class="w-full lg:w-4/12 px-4">
-        <div
-          class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-blueGray-200 border-0">
+        <div class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-blueGray-200 border-0">
           <div class="btn-wrapper text-center flex align-items-center justify-center mt-5">
             <img width="200" height="150" src="../../assets/img/logo6.png" alt="logo">
             <hr class="mt-6 border-b-1 border-blueGray-300" />
           </div>
           <div class="flex-auto px-4 lg:px-10 py-10 pt-0">
-            <!-- <div class="text-center mb-3 font-bold mt-5">
-              <h1 class="text-3xl">Login to LMS</h1>
-            </div> -->
             <form @submit.prevent="submitLogin">
               <div class="relative w-full mb-3 mt-5">
                 <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2" for="email">Email</label>
@@ -60,12 +56,14 @@
 
 <script>
 import { ref } from 'vue';
-import axiosInstance from 'axios'
 import { useRouter } from 'vue-router';
+import { useAuthStore } from '@/stores/auth-store'; // Adjust the path if necessary
 
 export default {
   setup() {
     const router = useRouter();
+    const authStore = useAuthStore(); // Access the auth store
+
     const emailError = ref('');
     const passwordError = ref('');
     const form = ref({
@@ -74,29 +72,35 @@ export default {
     });
 
     const submitLogin = async () => {
+      emailError.value = ''; // Reset errors
+      passwordError.value = '';
+
       try {
-        const response = await axiosInstance.post('http://127.0.0.1:8000/api/login', {
+        // Call the login action from the auth store
+        await authStore.login({
           email: form.value.email,
           password: form.value.password,
         });
-        localStorage.setItem('authToken', response.data.access_token);
-        localStorage.setItem('isAuthenticated', 'true');
-        if (response.data.roles.includes('Staff')) {
+
+        // Redirect based on roles or authentication
+        if (authStore.user && authStore.user.roles.includes('Staff')) {
           router.push('/admin/leaves');
         } else {
           router.push('/');
         }
       } catch (error) {
         // Handle specific error messages
-        if (error.response.status === 401) {
-          // Assuming 401 status for incorrect password or user not found
-          if (error.response.data.message.includes('User not found')) {
-            emailError.value = 'User not found'
-          } else if (error.response.data.message.includes('Incorrect password')) {
-            passwordError.value = 'Password is not correct'
+        if (error.response && error.response.status === 401) {
+          const message = error.response.data.message || '';
+          if (message.includes('User not found')) {
+            emailError.value = 'User not found';
+          } else if (message.includes('Incorrect password')) {
+            passwordError.value = 'Password is not correct';
+          } else {
+            console.warn('Error:', error);
           }
         } else {
-          console.warn('Error:', error)
+          console.warn('Error:', error);
         }
       }
     };

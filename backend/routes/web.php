@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\EmailController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,3 +22,4 @@ Route::get('/', function () {
 require __DIR__.'/auth.php';
 Route::post('/login', [AuthenticatedSessionController::class, 'store'])->middleware('guest');
 
+Route::get('/send-email', [EmailController::class, 'sendEmail']);
