@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\TypeLeaveController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DepartementController;
+use App\Http\Controllers\EmailController;
 use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\LeaveBalanceController;
 use App\Http\Controllers\PermissionController;
@@ -100,3 +101,6 @@ Route::get('/subordinates/list', [SubordinateController::class, 'getSubordinates
 Route::post('/subordinate/assign', [SubordinateController::class, 'assignSubordinate']);
 Route::delete('/subordinate/remove/{id}', [SubordinateController::class, 'removeSubordinate']);
 Route::put('/subordinate/update/{id}', [SubordinateController::class, 'updateSubordinate']);
+
+// ========================= Sending Email  =============================
+Route::post('/send-email', [EmailController::class, 'sendEmail']);

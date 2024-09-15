@@ -19,14 +19,14 @@ class AdminUserSeeder extends Seeder
     {
         $admin = User::create([
             'name' => 'Admin',
-            'email' => 'admin@gmail.com',
+            'email' => 'koemsran.phon1111@gmail.com',
             'leave_balance' => 2,
             'password' => Hash::make('password'), // Change 'password' to a more secure one
             'profile' => 'images/admin.jpg',
         ]);
         $manager = User::create([
-            'name' => 'Koemsran',
-            'email' => 'manager@gmail.com',
+            'name' => 'Manager',
+            'email' => 'koemsran168@gmail.com',
             'leave_balance' => 2,
             'password' => Hash::make('password'), // Change 'password' to a more secure one
             'profile' => 'images/manager.jpg',

@@ -133,7 +133,7 @@ export default {
           form.value.dateTo = form.value.dateFrom; // Reset to avoid invalid range
           form.value.duration = ''; // Reset duration
         } else {
-          const duration = Math.ceil((toDate - fromDate) / (1000 * 60 * 60 * 24)) + 1; // Duration in days
+          const duration = Math.ceil((toDate - fromDate) / (1000 * 60 * 60 * 24)); // Duration in days
           form.value.duration = duration;
         }
       }
@@ -170,6 +170,11 @@ export default {
             duration: form.value.duration,
             reason: form.value.reason
           });
+          // await axios.post('http://127.0.0.1:8000/api/send-email', {
+          //   user_id: userId.value,
+          //   leave_type_id: form.value.type,
+          //   date_from: form.value.dateFrom,
+          // });
 
           // Update token_balance after successful leave request submission
           await axios.put(`http://127.0.0.1:8000/api/balance/update/${userId.value}`, {

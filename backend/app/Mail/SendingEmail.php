@@ -3,25 +3,33 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
+use Illuminate\Mail\Mailables\Content;
 use Illuminate\Queue\SerializesModels;
-use PhpParser\Node\Expr\New_;
 use Illuminate\Mail\Mailables\Address;
+
 class SendingEmail extends Mailable
 {
     use Queueable, SerializesModels;
-    
-    public $mailMessage;
+
+    public $employeeName;
+    public $leaveType;
+    public $leaveDates;
+    public $leaveReason;
+    public $leaveId;
     public $subject;
+
     /**
      * Create a new message instance.
      */
-    public function __construct($message, $subject)
+    public function __construct($employeeName, $leaveType, $leaveDates, $leaveReason, $leaveId, $subject)
     {
-        $this->mailMessage = $message;
+        $this->employeeName = $employeeName;
+        $this->leaveType = $leaveType;
+        $this->leaveDates = $leaveDates;
+        $this->leaveReason = $leaveReason;
+        $this->leaveId = $leaveId;
         $this->subject = $subject;
     }
 
@@ -30,11 +38,10 @@ class SendingEmail extends Mailable
      */
     public function envelope(): Envelope
     {
-        
         return new Envelope(
-            from: new Address('koemsran.phon@student.passerellesnumeriques.org', 'LMS'),
-            replyTo:[
-                new Address('koemsran.phon@student.passerellesnumeriques.org', 'LMS'),
+            from: new Address('koemsran.phon@student.passerellesnumeriques.org', 'Leave Management'),
+            replyTo: [
+                new Address('koemsran.phon@student.passerellesnumeriques.org', 'Leave Management'),
             ],
             subject: $this->subject,
         );
@@ -43,11 +50,17 @@ class SendingEmail extends Mailable
     /**
      * Get the message content definition.
      */
-    public function content(): Content
+    public function build()
     {
-        return new Content(
-            view: 'mail-tampletes.sending-mail',
-        );
+        return $this->view('mail-tampletes.sending-mail') // Adjusted to your template path
+            ->subject($this->subject)
+            ->with([
+                'employeeName' => $this->employeeName,
+                'leaveType' => $this->leaveType,
+                'leaveDates' => $this->leaveDates,
+                'leaveReason' => $this->leaveReason,
+                'leaveId' => $this->leaveId,
+            ]);
     }
 
     /**

@@ -11,14 +11,20 @@ class EmailController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function sendEmail()
+    public function sendEmail(Request $request)
     {
-        $toEmail = 'koemsran.phon1111@gmail.com';
-        $message = 'Welcome to our Leave Request';
-        $subject = 'Welcome Leave Request';
-        $responde = Mail::to($toEmail)->send(new SendingEmail($message, $subject));
-        dd($responde);
+        $toEmail = $request->toEmail;
+        $subject = "Leave Request from " . $request->employeeName;
+        $employeeName = $request->employeeName;
+        $leaveType = $request->leaveType;
+        $leaveDates = $request->leaveDates;
+        $leaveReason = $request->leaveReason;
+        $leaveId = $request->leaveId;
+        Mail::to($toEmail)->send(new SendingEmail($employeeName, $leaveType, $leaveDates, $leaveReason, $leaveId, $subject));
+    
+        return response()->json(['success' => true, 'data' => 'Email sent successfully'], 200);
     }
+    
 
     /**
      * Show the form for creating a new resource.
