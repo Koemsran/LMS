@@ -105,3 +105,5 @@ Route::get('/subordinate/show/{subId}', [SubordinateController::class, 'showSubo
 
 // ========================= Sending Email  =============================
 Route::post('/send-email', [EmailController::class, 'sendEmail']);
+Route::post('/approve-email', [EmailController::class, 'approveEmail']);
+Route::post('/reject-email', [EmailController::class, 'rejectEmail']);

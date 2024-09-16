@@ -41,9 +41,6 @@
             border-radius: 4px;
             margin: 5px;
         }
-        .button.reject {
-            background-color: #dc3545;
-        }
         .footer {
             text-align: center;
             font-size: 12px;
@@ -62,23 +59,25 @@
             margin: 0;
             padding: 5px 0;
         }
+        .approved {
+            color: green;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="content">
-            <p>Dear Sir/Madam,</p>
-            <p>You have a new leave request that requires your attention.</p>
+            <p>Dear {{ $employeeName }},</p>
+            <p>We are pleased to inform you that your leave request has been <span class="approved">approved</span> for the following details:</p>
             <div class="leave-details">
-                <p><strong>Employee Name:</strong> {{ $employeeName }}</p>
                 <p><strong>Leave Type:</strong> {{ $leaveType }}</p>
                 <p><strong>Leave Dates:</strong> {{ $leaveDates }}</p>
                 <p><strong>Duration:</strong> {{ $duration }}</p>
                 <p><strong>Reason:</strong> {{ $leaveReason }}</p>
             </div>
-            <p>Click the buttons below to approve or reject the leave request:</p>
-            <a href="https://yourdomain.com/approve/{{ $leaveId }}" class="button " style="color: white;">Approve</a>
-            <a href="https://yourdomain.com/reject/{{ $leaveId }}" class="button reject" style="color: white;">Reject</a>
+            <p>Please ensure that you have completed or handed over your pending tasks before the leave starts.</p>
+            <p>If you need any further assistance, feel free to contact the HR department.</p>
         </div>
         <div class="footer">
             <p>&copy; {{ date('Y') }} Leave Management System. All rights reserved.</p>

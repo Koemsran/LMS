@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ApproveEmail;
+use App\Mail\CancelEmail;
+use App\Mail\RejectEmail;
 use App\Mail\SendingEmail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -23,6 +26,54 @@ class EmailController extends Controller
         $leaveId = $request->leaveId;
         $duration = $request->duration;
         Mail::to($toEmail)->send(new SendingEmail($employeeName, $leaveType, $leaveDates, $leaveReason, $leaveId, $subject, $mailFrom,$duration));
+    
+        return response()->json(['success' => true, 'data' => 'Email sent successfully'], 200);
+    }
+    
+    public function approveEmail(Request $request)
+    {
+        $toEmail = $request->toEmail;
+        $mailFrom = $request->mailFrom;
+        $subject = 'Leave Request Approval ' . $request->employeeName;
+        $employeeName = $request->employeeName;
+        $leaveType = $request->leaveType;
+        $leaveDates = $request->leaveDates;
+        $leaveReason = $request->leaveReason;
+        $leaveId = $request->leaveId;
+        $duration = $request->duration;
+        Mail::to($toEmail)->send(new ApproveEmail($employeeName, $leaveType, $leaveDates, $leaveReason, $leaveId, $subject, $mailFrom,$duration));
+    
+        return response()->json(['success' => true, 'data' => 'Email sent successfully'], 200);
+    }
+    
+    public function rejectEmail(Request $request)
+    {
+        $toEmail = $request->toEmail;
+        $mailFrom = $request->mailFrom;
+        $subject = 'Leave Request Reject ' . $request->employeeName;
+        $employeeName = $request->employeeName;
+        $leaveType = $request->leaveType;
+        $leaveDates = $request->leaveDates;
+        $leaveReason = $request->leaveReason;
+        $leaveId = $request->leaveId;
+        $duration = $request->duration;
+        Mail::to($toEmail)->send(new RejectEmail($employeeName, $leaveType, $leaveDates, $leaveReason, $leaveId, $subject, $mailFrom,$duration));
+    
+        return response()->json(['success' => true, 'data' => 'Email sent successfully'], 200);
+    }
+    
+    public function cancelEmail(Request $request)
+    {
+        $toEmail = $request->toEmail;
+        $mailFrom = $request->mailFrom;
+        $subject = 'Leave Request Cancel From ' . $request->employeeName;
+        $employeeName = $request->employeeName;
+        $leaveType = $request->leaveType;
+        $leaveDates = $request->leaveDates;
+        $leaveReason = $request->leaveReason;
+        $leaveId = $request->leaveId;
+        $duration = $request->duration;
+        Mail::to($toEmail)->send(new CancelEmail($employeeName, $leaveType, $leaveDates, $leaveReason, $leaveId, $subject, $mailFrom,$duration));
     
         return response()->json(['success' => true, 'data' => 'Email sent successfully'], 200);
     }

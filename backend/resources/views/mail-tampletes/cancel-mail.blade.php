@@ -41,9 +41,6 @@
             border-radius: 4px;
             margin: 5px;
         }
-        .button.reject {
-            background-color: #dc3545;
-        }
         .footer {
             text-align: center;
             font-size: 12px;
@@ -62,13 +59,18 @@
             margin: 0;
             padding: 5px 0;
         }
+        .canceled {
+            color: orange;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="content">
-            <p>Dear Sir/Madam,</p>
-            <p>You have a new leave request that requires your attention.</p>
+            <p>Dear {{ $managerName }},</p>
+            <p>I hope this message finds you well.</p>
+            <p>I am writing to inform you that I would like to cancel my previously requested leave for the period of {{ $leaveDates }}. Please find the details of the original leave request below:</p>
             <div class="leave-details">
                 <p><strong>Employee Name:</strong> {{ $employeeName }}</p>
                 <p><strong>Leave Type:</strong> {{ $leaveType }}</p>
@@ -76,9 +78,8 @@
                 <p><strong>Duration:</strong> {{ $duration }}</p>
                 <p><strong>Reason:</strong> {{ $leaveReason }}</p>
             </div>
-            <p>Click the buttons below to approve or reject the leave request:</p>
-            <a href="https://yourdomain.com/approve/{{ $leaveId }}" class="button " style="color: white;">Approve</a>
-            <a href="https://yourdomain.com/reject/{{ $leaveId }}" class="button reject" style="color: white;">Reject</a>
+            <p>Please confirm the cancellation of this leave request at your earliest convenience. If you need any additional information, please let me know.</p>
+            <p>Thank you for your understanding.</p>
         </div>
         <div class="footer">
             <p>&copy; {{ date('Y') }} Leave Management System. All rights reserved.</p>

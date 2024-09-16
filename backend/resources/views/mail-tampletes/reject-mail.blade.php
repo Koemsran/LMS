@@ -62,23 +62,25 @@
             margin: 0;
             padding: 5px 0;
         }
+        .rejected {
+            color: red;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="content">
-            <p>Dear Sir/Madam,</p>
-            <p>You have a new leave request that requires your attention.</p>
+            <p>Dear {{ $employeeName }},</p>
+            <p>We regret to inform you that your leave request for the period of {{ $leaveDates }} has been <span class="rejected">rejected</span>.</p>
             <div class="leave-details">
-                <p><strong>Employee Name:</strong> {{ $employeeName }}</p>
                 <p><strong>Leave Type:</strong> {{ $leaveType }}</p>
                 <p><strong>Leave Dates:</strong> {{ $leaveDates }}</p>
                 <p><strong>Duration:</strong> {{ $duration }}</p>
                 <p><strong>Reason:</strong> {{ $leaveReason }}</p>
             </div>
-            <p>Click the buttons below to approve or reject the leave request:</p>
-            <a href="https://yourdomain.com/approve/{{ $leaveId }}" class="button " style="color: white;">Approve</a>
-            <a href="https://yourdomain.com/reject/{{ $leaveId }}" class="button reject" style="color: white;">Reject</a>
+            <p>Please contact your supervisor or HR for further clarification or if you wish to discuss this decision.</p>
+            <p>We apologize for any inconvenience this may cause and appreciate your understanding.</p>
         </div>
         <div class="footer">
             <p>&copy; {{ date('Y') }} Leave Management System. All rights reserved.</p>
