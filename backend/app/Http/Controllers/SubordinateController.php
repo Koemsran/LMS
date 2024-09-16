@@ -16,7 +16,7 @@ class SubordinateController extends Controller
     {
         $subordinates = Subordinate::all();
         $subordinates = SubordinateResource::collection($subordinates);
-        return response()->json(['success'=>true, 'data'=>$subordinates], 200);
+        return response()->json(['success' => true, 'data' => $subordinates], 200);
     }
 
     /**
@@ -33,15 +33,20 @@ class SubordinateController extends Controller
     public function assignSubordinate(SubordinateRequest $request)
     {
         Subordinate::store($request);
-        return response()->json(['success'=> true, "message"=>"Subordinate assigned successfully"], 201);
+        return response()->json(['success' => true, "message" => "Subordinate assigned successfully"], 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function showSubordinate(string $subId)
     {
-        //
+        $subordinate = Subordinate::where('subordinator_id', $subId)->get();
+        if ($subordinate) {
+            $subordinate = SubordinateResource::collection($subordinate);
+            return response()->json(['success' => true, 'data' => $subordinate], 200);
+        }
+        return response()->json(['success' => false, 'message' => 'Subordinate not found'], 404);
     }
 
     /**
@@ -58,7 +63,7 @@ class SubordinateController extends Controller
     public function updateSubordinate(Request $request, string $id)
     {
         Subordinate::store($request, $id);
-        return response()->json(['success'=> true, "message"=>"Subordinate updated successfully"], 201);
+        return response()->json(['success' => true, "message" => "Subordinate updated successfully"], 201);
     }
 
     /**
@@ -68,6 +73,6 @@ class SubordinateController extends Controller
     {
         $subordinate = Subordinate::find($id);
         $subordinate->delete();
-        return response()->json(['success'=>true, 'message'=>'Subordinate deleted successfully'], 200);
+        return response()->json(['success' => true, 'message' => 'Subordinate deleted successfully'], 200);
     }
 }

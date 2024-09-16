@@ -74,6 +74,7 @@
                 <p><strong>Employee Name:</strong> {{ $employeeName }}</p>
                 <p><strong>Leave Type:</strong> {{ $leaveType }}</p>
                 <p><strong>Leave Dates:</strong> {{ $leaveDates }}</p>
+                <p><strong>Duration:</strong> {{ $duration }}</p>
                 <p><strong>Reason:</strong> {{ $leaveReason }}</p>
             </div>
             <p>Click the buttons below to approve or reject the leave request:</p>

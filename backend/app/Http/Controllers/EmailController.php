@@ -14,13 +14,15 @@ class EmailController extends Controller
     public function sendEmail(Request $request)
     {
         $toEmail = $request->toEmail;
+        $mailFrom = $request->mailFrom;
         $subject = "Leave Request from " . $request->employeeName;
         $employeeName = $request->employeeName;
         $leaveType = $request->leaveType;
         $leaveDates = $request->leaveDates;
         $leaveReason = $request->leaveReason;
         $leaveId = $request->leaveId;
-        Mail::to($toEmail)->send(new SendingEmail($employeeName, $leaveType, $leaveDates, $leaveReason, $leaveId, $subject));
+        $duration = $request->duration;
+        Mail::to($toEmail)->send(new SendingEmail($employeeName, $leaveType, $leaveDates, $leaveReason, $leaveId, $subject, $mailFrom,$duration));
     
         return response()->json(['success' => true, 'data' => 'Email sent successfully'], 200);
     }

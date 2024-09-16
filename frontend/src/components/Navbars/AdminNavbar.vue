@@ -103,7 +103,8 @@ export default {
   },
   setup() {
     const showPopup = ref(false);
-    const userId = ref(null);
+    const user = ref(null);
+    const managerMail = ref(null);
     const form = ref({
       duration: '', // Initially empty, will be calculated
       type: '', // Default to empty string
@@ -122,7 +123,16 @@ export default {
         console.error('Error fetching leave types:', error);
       }
     };
+    const showSubordinate = async () => {
+      try {
+        const response = await axios.get(`http://127.0.0.1:8000/api/subordinate/show/${user.value.id}`);
+        managerMail.value = response.data.data.map(subordinate => subordinate.namager_email);
 
+      
+      } catch (error) {
+        console.error('Error fetching subordinate:', error);
+      }
+    };
 
     const calculateDuration = () => {
       if (form.value.dateFrom && form.value.dateTo) {
@@ -162,28 +172,29 @@ export default {
         try {
 
           // Proceed with leave request if the duration is valid
-          await axios.post('http://127.0.0.1:8000/api/leave/request', {
-            user_id: userId.value,
+          const response = await axios.post('http://127.0.0.1:8000/api/leave/request', {
+            user_id: user.value.id,
             leave_type_id: form.value.type,
             date_from: form.value.dateFrom,
             date_to: form.value.dateTo,
             duration: form.value.duration,
             reason: form.value.reason
           });
-          // await axios.post('http://127.0.0.1:8000/api/send-email', {
-          //   user_id: userId.value,
-          //   leave_type_id: form.value.type,
-          //   date_from: form.value.dateFrom,
-          // });
+          await axios.post('http://127.0.0.1:8000/api/send-email', {
+            toEmail: managerMail.value,
+            mailFrom: user.value.email,
+            employeeName: user.value.name,
+            leaveType: response.data.data.leave_type,
+            duration: form.value.duration,
+            leaveDates: `${form.value.dateFrom} to ${form.value.dateTo}`,
+            leaveReason: form.value.reason,
+            leaveId: response.data.data.id,
+          });
 
           // Update token_balance after successful leave request submission
-          await axios.put(`http://127.0.0.1:8000/api/balance/update/${userId.value}`, {
+          await axios.put(`http://127.0.0.1:8000/api/balance/update/${user.value.id}`, {
             token_balance: form.value.duration
           })
-            .then(response => {
-              console.log('Token balance updated:', response.data);
-            });
-
           // Clear the form after successful submission
           clearForm();
           showPopup.value = false;
@@ -213,8 +224,9 @@ export default {
             Authorization: `Bearer ${token}`
           }
         });
-        userId.value = response.data.data.id;
+        user.value = response.data.data;
         fetchTypes();
+        showSubordinate();
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -225,11 +237,13 @@ export default {
 
     return {
       showPopup,
-      userId,
       form,
       leaveTypes,
       calculateDuration,
       submitForm,
+      showSubordinate,
+      user,
+      managerMail
     };
   }
 };

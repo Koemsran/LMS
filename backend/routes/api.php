@@ -101,6 +101,7 @@ Route::get('/subordinates/list', [SubordinateController::class, 'getSubordinates
 Route::post('/subordinate/assign', [SubordinateController::class, 'assignSubordinate']);
 Route::delete('/subordinate/remove/{id}', [SubordinateController::class, 'removeSubordinate']);
 Route::put('/subordinate/update/{id}', [SubordinateController::class, 'updateSubordinate']);
+Route::get('/subordinate/show/{subId}', [SubordinateController::class, 'showSubordinate']);
 
 // ========================= Sending Email  =============================
 Route::post('/send-email', [EmailController::class, 'sendEmail']);

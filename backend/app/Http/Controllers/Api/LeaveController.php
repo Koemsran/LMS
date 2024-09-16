@@ -36,12 +36,13 @@ class LeaveController extends Controller
     public function store(LeaveRequest $request)
     {
         $leave = Leave::store($request);
+        $leave = new LeaveResource($leave);
         History::create([
             'leave_id' => $leave->id,
             'user_id' => $leave->user_id,
             'created_at' => now(),
         ]);
-        return response()->json(['success' => true, 'message' => 'Leave created successfully'], 201);
+        return response()->json(['success' => true, 'message' => 'Leave created successfully', 'data'=>$leave], 201);
     }
 
     /**

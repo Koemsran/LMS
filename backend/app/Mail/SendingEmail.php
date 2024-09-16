@@ -19,11 +19,13 @@ class SendingEmail extends Mailable
     public $leaveReason;
     public $leaveId;
     public $subject;
+    public $mailFrom;
+    public $duration;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($employeeName, $leaveType, $leaveDates, $leaveReason, $leaveId, $subject)
+    public function __construct($employeeName, $leaveType, $leaveDates, $leaveReason, $leaveId, $subject, $mailFrom, $duration)
     {
         $this->employeeName = $employeeName;
         $this->leaveType = $leaveType;
@@ -31,6 +33,8 @@ class SendingEmail extends Mailable
         $this->leaveReason = $leaveReason;
         $this->leaveId = $leaveId;
         $this->subject = $subject;
+        $this->mailFrom = $mailFrom;
+        $this->duration = $duration;
     }
 
     /**
@@ -39,9 +43,9 @@ class SendingEmail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: new Address('koemsran.phon@student.passerellesnumeriques.org', 'Leave Management'),
+            from: new Address($this->mailFrom, 'Leave Management'),
             replyTo: [
-                new Address('koemsran.phon@student.passerellesnumeriques.org', 'Leave Management'),
+                new Address($this->mailFrom, 'Leave Management'),
             ],
             subject: $this->subject,
         );
@@ -60,6 +64,7 @@ class SendingEmail extends Mailable
                 'leaveDates' => $this->leaveDates,
                 'leaveReason' => $this->leaveReason,
                 'leaveId' => $this->leaveId,
+                'duration' => $this->duration,
             ]);
     }
 
