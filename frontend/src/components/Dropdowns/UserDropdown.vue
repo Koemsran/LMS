@@ -53,25 +53,18 @@
 
 <script>
 import { createPopper } from "@popperjs/core";
-import { ref, onMounted } from "vue";
+import { ref, computed} from "vue";
 import { useAuthStore } from '@/stores/auth-store'; // Adjust the path if necessary
 
 export default {
   setup() {
     const authStore = useAuthStore(); // Access the auth store
-    const user = ref({});
     const dropdownPopoverShow = ref(false);
 
     const btnDropdownRef = ref(null);
     const popoverDropdownRef = ref(null);
-
-    onMounted(async () => {
-      try {
-        await authStore.fetchUser(); // Fetch user data from the store
-        user.value = authStore.user;
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-      }
+    const user = computed(() => {
+      return authStore.user;
     });
 
     function toggleDropdown(event) {

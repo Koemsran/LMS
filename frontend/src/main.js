@@ -1,7 +1,8 @@
 import { createApp } from "vue";
 import { createWebHistory, createRouter } from "vue-router";
 import { createPinia } from 'pinia'; 
-
+import piniaPersist from 'pinia-plugin-persistedstate';
+import { useAuthStore } from '@/stores/auth-store';
 
 // styles
 
@@ -13,7 +14,6 @@ import App from "@/App.vue";
 // layouts
 
 import Admin from "@/layouts/Admin.vue";
-import Auth from "@/layouts/Auth.vue";
 
 // views for Admin layout
 
@@ -71,16 +71,8 @@ const routes = [
     ],
   },
   {
-    path: "/auth",
-    redirect: "/auth/login",
-    component: Auth,
-    children: [
-      
-      {
-        path: "/auth/register",
-        component: Register,
-      },
-    ],
+    path: "/auth/register",
+    component: Register,
   },
   {
     path: "/auth/login",
@@ -178,11 +170,10 @@ const router = createRouter({
   history: createWebHistory(),
   routes,
 });
-const pinia = createPinia(); // Create a Pinia instance
-
 router.beforeEach((to, from, next) => {
   const publicRoutes = ['/auth/login', '/auth/register'];
-  const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+  const authStore = useAuthStore();
+  const isAuthenticated = authStore.isAuthenticated;
 
   if (publicRoutes.includes(to.path)) {
     next(); // Allow navigation to public routes
@@ -192,4 +183,6 @@ router.beforeEach((to, from, next) => {
     next('/auth/login'); // Redirect to login if not authenticated
   }
 });
+const pinia = createPinia();
+pinia.use(piniaPersist);
 createApp(App).use(router).use(pinia).mount("#app");

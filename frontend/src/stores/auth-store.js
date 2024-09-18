@@ -1,5 +1,3 @@
-// src/stores/auth-store.js
-
 import { defineStore } from 'pinia';
 import axios from 'axios';
 
@@ -8,6 +6,7 @@ export const useAuthStore = defineStore('auth', {
     isAuthenticated: false,
     user: null,
   }),
+
   actions: {
     async login(user) {
       try {
@@ -16,52 +15,71 @@ export const useAuthStore = defineStore('auth', {
           password: user.password,
         });
 
-        // Save token and authentication state
         localStorage.setItem('authToken', response.data.access_token);
-        localStorage.setItem('isAuthenticated', 'true');
 
-        // Save user data (or any other relevant data)
-        this.user = { ...response.data.user, roles: response.data.roles };
+        // Fetch user data and set it in the state
+        await this.fetchUser(response.data.access_token);
         this.isAuthenticated = true;
       } catch (error) {
-        // Handle errors from API
         throw new Error(error.response?.data?.message || 'An error occurred during login.');
       }
     },
+
     async logout() {
       try {
         const token = localStorage.getItem('authToken');
 
         await axios.post('http://127.0.0.1:8000/api/logout', {}, {
           headers: {
-            'Authorization': `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         });
 
-        // Clear local storage and state
         localStorage.removeItem('authToken');
-        localStorage.setItem('isAuthenticated', 'false');
-        this.user = null;
-        this.isAuthenticated = false;
+        this.$reset(); // Reset the store to its initial state
       } catch (error) {
         console.error('Logout error:', error);
       }
     },
-    async fetchUser() {
+
+    async fetchUser(token) {
       try {
-        const token = localStorage.getItem('authToken');
         const response = await axios.get('http://127.0.0.1:8000/api/me', {
           headers: {
-            'Authorization': `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         });
+
         this.user = response.data.data;
+        this.isAuthenticated = true;
       } catch (error) {
         console.error('Error fetching user data:', error);
       }
     },
+
+    loadUserFromLocalStorage() {
+      const storedUser = localStorage.getItem('user');
+      const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+
+      if (storedUser) {
+        this.user = JSON.parse(storedUser);
+        this.isAuthenticated = isAuthenticated;
+      }
+    },
   },
+
   getters: {
     userName: (state) => state.user?.name ?? 'Guest',
+  },
+
+  // Enable persistence for the store
+  persist: {
+    enabled: true,
+    strategies: [
+      {
+        key: 'auth',
+        storage: localStorage, // Persist data to localStorage
+      },
+    ],
   },
 });

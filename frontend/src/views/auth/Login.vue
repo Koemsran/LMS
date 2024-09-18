@@ -35,7 +35,7 @@
               </div>
               <div class="text-center mt-6">
                 <button
-                  class="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
+                  class="bg-emerald-600 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
                   type="submit">Login</button>
               </div>
             </form>
@@ -43,10 +43,10 @@
         </div>
         <div class="flex flex-wrap mt-6 relative">
           <div class="w-1/2">
-            <a href="javascript:void(0)" class="text-blueGray-200"><small>Forgot password?</small></a>
+            <a href="javascript:void(0)" class="text-blueGray-400"><small>Forgot password?</small></a>
           </div>
           <div class="w-1/2 text-right">
-            <router-link to="/auth/register" class="text-blueGray-200"><small>Create new account</small></router-link>
+            <router-link to="/auth/register" class="text-blueGray-400"><small>Create new account</small></router-link>
           </div>
         </div>
       </div>

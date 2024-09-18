@@ -394,40 +394,65 @@
 ); }
 
 <script>
-import axios from "axios";
 import NotificationDropdown from "@/components/Dropdowns/NotificationDropdown.vue";
 import UserDropdown from "@/components/Dropdowns/UserDropdown.vue";
+import { useAuthStore } from '@/stores/auth-store';
+import { computed } from 'vue';
 
 export default {
   data() {
     return {
       collapseShow: "hidden",
-      admin: false,
-      staff: false,
-      manager: false,
     };
   },
-  mounted() {
-    this.fetchUser();
+  setup() {
+    const authStore = useAuthStore(); // Access the auth store
+
+    const user = computed(() => authStore.user);
+
+    const admin = computed(() => {
+      if (Array.isArray(user.value.roles)) {
+        for (const role of user.value.roles) {
+          if (role.name === 'Admin') {
+            return true; // Return true if an 'Admin' role is found
+          }
+        }
+      }
+      return false; // Return false if no 'Admin' role is found
+    });
+
+    const staff = computed(() => {
+      if (Array.isArray(user.value.roles)) {
+        for (const role of user.value.roles) {
+          if (role.name === 'Staff') {
+            return true; // Return true if a 'Staff' role is found
+          }
+        }
+      }
+      return false; // Return false if no 'Staff' role is found
+    });
+
+    const manager = computed(() => {
+      if (Array.isArray(user.value.roles)) {
+        for (const role of user.value.roles) {
+          if (role.name === 'Manager') {
+            return true; // Return true if a 'Manager' role is found
+          }
+        }
+      }
+      return false; // Return false if no 'Manager' role is found
+    });
+
+    return {
+      user,
+      admin,
+      staff,
+      manager,
+    };
   },
   methods: {
-    toggleCollapseShow: function (classes) {
+    toggleCollapseShow(classes) {
       this.collapseShow = classes;
-    },
-    async fetchUser() {
-      try {
-        const token = localStorage.getItem('authToken');
-        const response = await axios.get('http://127.0.0.1:8000/api/me', {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-        this.admin = response.data.data.roles.some(role => role.name === 'Admin');
-        this.staff = response.data.data.roles.some(role => role.name === 'Staff');
-        this.manager = response.data.data.roles.some(role => role.name === 'Manager');
-      } catch (error) {
-        console.error('Error fetching user:', error);
-      }
     },
   },
   components: {

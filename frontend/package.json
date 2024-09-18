@@ -24,6 +24,7 @@
     "gulp": "4.0.2",
     "gulp-append-prepend": "1.0.8",
     "pinia": "^2.2.2",
+    "pinia-plugin-persistedstate": "^4.0.1",
     "tailwindcss": "2.0.4",
     "vue": "^3.4.38",
     "vue-router": "4.0.5"
